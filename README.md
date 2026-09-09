@@ -11,9 +11,9 @@ LARIS adalah sebuah sistem kasir dan manajemen stok berbasis web yang dibangun u
 | Peran | Nama Anggota | NIM / NPM |
 |---|---|---|
 | Autentikasi, Otorisasi & Pengguna | Muhammad Zakiyyuddin Abdul Adhiim | 24/545668/TK/60719 |
-| Produk, Stok & Peringatan |  | |  |
-| Transaksi, Kasir & Pembayaran |  |  |
-| Laporan, Dashboard, Ekspor & Cache | Sukmawati] | 24/545512/TK/60686 |
+| Produk, Stok & Peringatan | Josiah Hermes | 24/543958/TK/60463 |
+| Transaksi, Kasir & Pembayaran | [Nama Anggota C] | [NIM Anggota C] |
+| Laporan, Dashboard, Ekspor & Cache | Sukmawati | 24/545512/TK/60686 |
 
 ## 🚀 Fitur Utama
 
