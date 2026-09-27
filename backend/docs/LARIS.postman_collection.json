@@ -1,0 +1,255 @@
+{
+	"info": {
+		"_postman_id": "laris-backend-api-collection",
+		"name": "LARIS API Collection",
+		"description": "Collection Postman untuk API Sistem Kasir & Manajemen Stok LARIS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Autentikasi",
+			"item": [
+				{
+					"name": "Login Pemilik",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"owner@laris.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Login Kasir",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"kasir@laris.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/auth/login",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Profil Saya",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/auth/profil",
+							"host": ["{{baseUrl}}"],
+							"path": ["auth", "profil"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Produk",
+			"item": [
+				{
+					"name": "Daftar Produk",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/produk",
+							"host": ["{{baseUrl}}"],
+							"path": ["produk"]
+						}
+					}
+				},
+				{
+					"name": "Stok Menipis",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/produk/stok-menipis",
+							"host": ["{{baseUrl}}"],
+							"path": ["produk", "stok-menipis"]
+						}
+					}
+				},
+				{
+					"name": "Tambah Produk",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nama\": \"Minyak Goreng Bimoli 1L\",\n  \"kategori\": \"Sembako\",\n  \"harga\": 18000,\n  \"stok\": 30,\n  \"stokMinimum\": 5,\n  \"satuan\": \"pouch\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/produk",
+							"host": ["{{baseUrl}}"],
+							"path": ["produk"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Transaksi",
+			"item": [
+				{
+					"name": "Buat Transaksi Tunai",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"items\": [\n    {\n      \"productId\": \"{{productId}}\",\n      \"qty\": 2\n    }\n  ],\n  \"metodeBayar\": \"tunai\",\n  \"nominalBayar\": 50000\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/transaksi",
+							"host": ["{{baseUrl}}"],
+							"path": ["transaksi"]
+						}
+					}
+				},
+				{
+					"name": "Riwayat Transaksi",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/transaksi",
+							"host": ["{{baseUrl}}"],
+							"path": ["transaksi"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Laporan",
+			"item": [
+				{
+					"name": "Ringkasan Dashboard",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/laporan/ringkasan",
+							"host": ["{{baseUrl}}"],
+							"path": ["laporan", "ringkasan"]
+						}
+					}
+				},
+				{
+					"name": "Omzet Harian",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/laporan/omzet-harian",
+							"host": ["{{baseUrl}}"],
+							"path": ["laporan", "omzet-harian"]
+						}
+					}
+				},
+				{
+					"name": "Produk Terlaris",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/laporan/produk-terlaris",
+							"host": ["{{baseUrl}}"],
+							"path": ["laporan", "produk-terlaris"]
+						}
+					}
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:5000/api"
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "productId",
+			"value": ""
+		}
+	]
+}
