@@ -86,6 +86,5 @@ const transaksiSchema = new mongoose.Schema(
 
 transaksiSchema.index({ createdAt: -1 });
 transaksiSchema.index({ kasirId: 1, createdAt: -1 });
-transaksiSchema.index({ nomorTransaksi: 1 }, { unique: true });
 
 module.exports = mongoose.model('Transaksi', transaksiSchema);
