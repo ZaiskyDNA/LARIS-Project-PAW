@@ -1,7 +1,20 @@
 const { gagal } = require('../utilitas/formatResponsApi');
 
+const tidakDitemukan = (req, res) =>
+  gagal(res, 404, `Rute ${req.method} ${req.originalUrl} tidak ditemukan`, 'TIDAK_DITEMUKAN');
+
 const penangananGalat = (err, req, res, next) => {
-  console.error(err);
+  if (err.type === 'entity.parse.failed') {
+    return gagal(res, 400, 'Format JSON tidak valid', 'VALIDASI_GAGAL');
+  }
+
+  if (err.name === 'CastError') {
+    return gagal(res, 400, `Nilai ${err.path} tidak valid`, 'VALIDASI_GAGAL');
+  }
+
+  if (process.env.NODE_ENV !== 'test') {
+    console.error(err);
+  }
 
   let statusCode = res.statusCode && res.statusCode !== 200 ? res.statusCode : 500;
   let pesan = err.message || 'Terjadi kesalahan internal pada server';
@@ -25,7 +38,12 @@ const penangananGalat = (err, req, res, next) => {
     return gagal(res, statusCode, pesan, kodeGalat);
   }
 
+  if (process.env.NODE_ENV === 'production') {
+    pesan = 'Terjadi kesalahan internal pada server';
+  }
+
   return gagal(res, statusCode, pesan, kodeGalat);
 };
 
 module.exports = penangananGalat;
+module.exports.tidakDitemukan = tidakDitemukan;

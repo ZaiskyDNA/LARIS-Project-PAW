@@ -3,6 +3,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const ruteUtama = require('./rute');
 const penangananGalat = require('./middleware/penangananGalat');
+const { tidakDitemukan } = penangananGalat;
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.get('/', (req, res) => {
 
 app.use('/api', ruteUtama);
 
+app.use(tidakDitemukan);
 app.use(penangananGalat);
 
 module.exports = app;
