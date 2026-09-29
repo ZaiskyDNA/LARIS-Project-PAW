@@ -9,13 +9,6 @@ const snap = new midtransClient.Snap({
   clientKey: clientKey,
 });
 
-const coreApi = new midtransClient.CoreApi({
-  isProduction: false,
-  serverKey: serverKey,
-  clientKey: clientKey,
-});
-
 module.exports = {
   snap,
-  coreApi,
 };
