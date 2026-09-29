@@ -1,285 +1,6022 @@
 {
-	"info": {
-		"_postman_id": "laris-backend-api-collection",
-		"name": "LARIS API Collection",
-		"description": "Collection Postman untuk API Sistem Kasir & Manajemen Stok LARIS",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-	},
-	"item": [
-		{
-			"name": "Autentikasi",
-			"item": [
-				{
-					"name": "Login Pemilik",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var jsonData = pm.response.json();",
-									"if (jsonData.sukses && jsonData.data && jsonData.data.token) {",
-									"    pm.collectionVariables.set('token', jsonData.data.token);",
-									"    console.log('Token otomatis tersimpan:', jsonData.data.token);",
-									"}"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"email\": \"owner@laris.com\",\n  \"password\": \"password123\"\n}"
-						},
-						"url": {
-							"raw": "{{baseUrl}}/auth/login",
-							"host": ["{{baseUrl}}"],
-							"path": ["auth", "login"]
-						}
-					}
-				},
-				{
-					"name": "Login Kasir",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"exec": [
-									"var jsonData = pm.response.json();",
-									"if (jsonData.sukses && jsonData.data && jsonData.data.token) {",
-									"    pm.collectionVariables.set('token', jsonData.data.token);",
-									"    console.log('Token otomatis tersimpan:', jsonData.data.token);",
-									"}"
-								],
-								"type": "text/javascript"
-							}
-						}
-					],
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"email\": \"kasir@laris.com\",\n  \"password\": \"password123\"\n}"
-						},
-						"url": {
-							"raw": "{{baseUrl}}/auth/login",
-							"host": ["{{baseUrl}}"],
-							"path": ["auth", "login"]
-						}
-					}
-				},
-				{
-					"name": "Profil Saya",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/auth/profil",
-							"host": ["{{baseUrl}}"],
-							"path": ["auth", "profil"]
-						}
-					}
-				}
-			]
-		},
-		{
-			"name": "Produk",
-			"item": [
-				{
-					"name": "Daftar Produk",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/produk",
-							"host": ["{{baseUrl}}"],
-							"path": ["produk"]
-						}
-					}
-				},
-				{
-					"name": "Stok Menipis",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/produk/stok-menipis",
-							"host": ["{{baseUrl}}"],
-							"path": ["produk", "stok-menipis"]
-						}
-					}
-				},
-				{
-					"name": "Tambah Produk",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}"
-							},
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"nama\": \"Minyak Goreng Bimoli 1L\",\n  \"kategori\": \"Sembako\",\n  \"harga\": 18000,\n  \"stok\": 30,\n  \"stokMinimum\": 5,\n  \"satuan\": \"pouch\"\n}"
-						},
-						"url": {
-							"raw": "{{baseUrl}}/produk",
-							"host": ["{{baseUrl}}"],
-							"path": ["produk"]
-						}
-					}
-				}
-			]
-		},
-		{
-			"name": "Transaksi",
-			"item": [
-				{
-					"name": "Buat Transaksi Tunai",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}"
-							},
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"items\": [\n    {\n      \"productId\": \"{{productId}}\",\n      \"qty\": 2\n    }\n  ],\n  \"metodeBayar\": \"tunai\",\n  \"nominalBayar\": 50000\n}"
-						},
-						"url": {
-							"raw": "{{baseUrl}}/transaksi",
-							"host": ["{{baseUrl}}"],
-							"path": ["transaksi"]
-						}
-					}
-				},
-				{
-					"name": "Riwayat Transaksi",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/transaksi",
-							"host": ["{{baseUrl}}"],
-							"path": ["transaksi"]
-						}
-					}
-				}
-			]
-		},
-		{
-			"name": "Laporan",
-			"item": [
-				{
-					"name": "Ringkasan Dashboard",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/laporan/ringkasan",
-							"host": ["{{baseUrl}}"],
-							"path": ["laporan", "ringkasan"]
-						}
-					}
-				},
-				{
-					"name": "Omzet Harian",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/laporan/omzet-harian",
-							"host": ["{{baseUrl}}"],
-							"path": ["laporan", "omzet-harian"]
-						}
-					}
-				},
-				{
-					"name": "Produk Terlaris",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer {{token}}"
-							}
-						],
-						"url": {
-							"raw": "{{baseUrl}}/laporan/produk-terlaris",
-							"host": ["{{baseUrl}}"],
-							"path": ["laporan", "produk-terlaris"]
-						}
-					}
-				}
-			]
-		}
-	],
-	"variable": [
-		{
-			"key": "baseUrl",
-			"value": "http://localhost:5000/api"
-		},
-		{
-			"key": "token",
-			"value": ""
-		},
-		{
-			"key": "productId",
-			"value": ""
-		}
-	]
+  "info": {
+    "name": "LARIS API - Milestone 1",
+    "description": "Koleksi pengujian API backend LARIS (Kelompok 15). Jalankan seed dahulu (`npm run seed`), lalu jalankan koleksi ini berurutan (Collection Runner). Setiap request memiliki test otomatis.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "00 - Umum",
+      "description": "Pemeriksaan kesehatan server dan penanganan rute/JSON tidak valid.",
+      "item": [
+        {
+          "name": "Health check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"API berjalan\", () => pm.expect(pm.response.json().pesan).to.include(\"running\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{serverUrl}}/",
+              "host": [
+                "{{serverUrl}}"
+              ],
+              "path": []
+            }
+          }
+        },
+        {
+          "name": "Rute tidak dikenal -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"kodeGalat TIDAK_DITEMUKAN\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_DITEMUKAN\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/rute-tidak-ada",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rute-tidak-ada"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Body JSON rusak -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{email: rusak",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "01 - Autentikasi",
+      "description": "US-01, US-08 | FR-01..FR-05, FR-31",
+      "item": [
+        {
+          "name": "Login Pemilik (sukses)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"sukses = true\", () => pm.expect(pm.response.json().sukses).to.eql(true));",
+                  "",
+                  "const j = pm.response.json();",
+                  "pm.test(\"Mengembalikan JWT dan data user\", () => { pm.expect(j.data.token).to.be.a(\"string\"); pm.expect(j.data.user.role).to.eql(\"pemilik\"); });",
+                  "pm.test(\"Password tidak pernah dikembalikan\", () => pm.expect(JSON.stringify(j)).to.not.include(\"password\"));",
+                  "pm.collectionVariables.set(\"tokenPemilik\", j.data.token);",
+                  "pm.collectionVariables.set(\"pemilikId\", j.data.user._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"owner@laris.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Login Kasir (sukses)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"sukses = true\", () => pm.expect(pm.response.json().sukses).to.eql(true));",
+                  "",
+                  "const j = pm.response.json();",
+                  "pm.test(\"Role kasir\", () => pm.expect(j.data.user.role).to.eql(\"kasir\"));",
+                  "pm.collectionVariables.set(\"tokenKasir\", j.data.token);",
+                  "pm.collectionVariables.set(\"kasirId\", j.data.user._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"kasir@laris.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Login kata sandi salah -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat KREDENSIAL_SALAH\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"KREDENSIAL_SALAH\"));",
+                  "pm.test(\"Pesan tidak menyebut field mana yang salah\", () => pm.expect(pm.response.json().pesan).to.eql(\"Email atau kata sandi salah\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"owner@laris.com\",\n  \"password\": \"salah12345\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Login email tidak terdaftar -> 401 (pesan sama)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat KREDENSIAL_SALAH\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"KREDENSIAL_SALAH\"));",
+                  "pm.test(\"Pesan identik (anti user enumeration)\", () => pm.expect(pm.response.json().pesan).to.eql(\"Email atau kata sandi salah\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"tidakada@laris.com\",\n  \"password\": \"password123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Login field kosong -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"\",\n  \"password\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Profil dengan token pemilik",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Data profil\", () => pm.expect(pm.response.json().data.email).to.eql(\"owner@laris.com\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/profil",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "profil"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Profil tanpa token -> 401 (E2E-07)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat TIDAK_TERAUTENTIKASI\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_TERAUTENTIKASI\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/profil",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "profil"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Profil token palsu -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat TIDAK_TERAUTENTIKASI\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_TERAUTENTIKASI\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer token.palsu.xyz"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/profil",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "profil"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"sukses = true\", () => pm.expect(pm.response.json().sukses).to.eql(true));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "logout"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 - Manajemen Pengguna",
+      "description": "US-07 | FR-28, BR-08, BR-09",
+      "item": [
+        {
+          "name": "Buat akun kasir baru (sukses)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"ts\", String(Date.now()));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"sukses = true\", () => pm.expect(pm.response.json().sukses).to.eql(true));",
+                  "",
+                  "const j = pm.response.json();",
+                  "pm.test(\"Role kasir & password tidak dikembalikan\", () => { pm.expect(j.data.role).to.eql(\"kasir\"); pm.expect(j.data).to.not.have.property(\"password\"); });",
+                  "pm.collectionVariables.set(\"kasirBaruId\", j.data._id);",
+                  "pm.collectionVariables.set(\"kasirBaruEmail\", j.data.email);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Kasir Uji\",\n  \"email\": \"kasir.uji.{{ts}}@laris.com\",\n  \"password\": \"rahasia123\",\n  \"role\": \"kasir\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Buat akun email duplikat -> 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"kodeGalat DATA_DUPLIKAT\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"DATA_DUPLIKAT\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Kasir Dobel\",\n  \"email\": \"{{kasirBaruEmail}}\",\n  \"password\": \"rahasia123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Buat akun kata sandi lemah -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));",
+                  "pm.test(\"Galat per field\", () => pm.expect(pm.response.json().galat[0].field).to.eql(\"password\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Kasir Lemah\",\n  \"email\": \"lemah@laris.com\",\n  \"password\": \"abcdefgh\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Buat akun email & role tidak valid -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));",
+                  "pm.test(\"3 galat field\", () => pm.expect(pm.response.json().galat.length).to.eql(3));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Ab\",\n  \"email\": \"bukan-email\",\n  \"password\": \"rahasia123\",\n  \"role\": \"admin\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Kasir baru dapat login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set(\"tokenKasirBaru\", pm.response.json().data.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{kasirBaruEmail}}\",\n  \"password\": \"rahasia123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Daftar pengguna (filter role=kasir)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "",
+                  "const d = pm.response.json().data;",
+                  "pm.test(\"Hanya kasir & tanpa password\", () => { pm.expect(d.every(u => u.role === \"kasir\")).to.eql(true); pm.expect(JSON.stringify(d)).to.not.include(\"password\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users?role=kasir",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "role",
+                  "value": "kasir"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Ubah nama pengguna",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Nama berubah\", () => pm.expect(pm.response.json().data.nama).to.eql(\"Kasir Uji Diubah\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{kasirBaruId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{kasirBaruId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Kasir Uji Diubah\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Pemilik hapus akun sendiri -> 400 (BR-09)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{pemilikId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{pemilikId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Nonaktifkan kasir baru",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"sukses = true\", () => pm.expect(pm.response.json().sukses).to.eql(true));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{kasirBaruId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{kasirBaruId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Kasir nonaktif tidak bisa login -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat KREDENSIAL_SALAH\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"KREDENSIAL_SALAH\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{kasirBaruEmail}}\",\n  \"password\": \"rahasia123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Token kasir nonaktif ditolak -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat TIDAK_TERAUTENTIKASI\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_TERAUTENTIKASI\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasirBaru}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/profil",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "profil"
+              ]
+            }
+          }
+        },
+        {
+          "name": "ID pengguna tidak valid -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"kodeGalat TIDAK_DITEMUKAN\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_DITEMUKAN\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/bukan-id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "bukan-id"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 - Produk & Stok",
+      "description": "US-02, US-03, US-04, US-13 | FR-06..FR-10, FR-22..FR-25",
+      "item": [
+        {
+          "name": "Tambah Produk A (E2E-01)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"ts\", String(Date.now()));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"sukses = true\", () => pm.expect(pm.response.json().sukses).to.eql(true));",
+                  "",
+                  "const p = pm.response.json().data;",
+                  "pm.test(\"Data tersimpan benar\", () => { pm.expect(p.harga).to.eql(5000); pm.expect(p.stok).to.eql(10); pm.expect(p.statusStok).to.eql(\"aman\"); });",
+                  "pm.collectionVariables.set(\"produkAId\", p._id); pm.collectionVariables.set(\"produkANama\", p.nama); pm.collectionVariables.set(\"produkABarcode\", p.barcode);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Uji Produk A {{ts}}\",\n  \"kategori\": \"Uji\",\n  \"harga\": 5000,\n  \"stok\": 10,\n  \"stokMinimum\": 3,\n  \"satuan\": \"pcs\",\n  \"barcode\": \"UJIA{{ts}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Tambah Produk B",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"ts\", String(Date.now()));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set(\"produkBId\", pm.response.json().data._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Uji Produk B {{ts}}\",\n  \"kategori\": \"Uji\",\n  \"harga\": 2500,\n  \"stok\": 5,\n  \"stokMinimum\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Tambah Produk C (stok menipis)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"ts\", String(Date.now()));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"Status menipis\", () => pm.expect(pm.response.json().data.statusStok).to.eql(\"menipis\"));",
+                  "pm.collectionVariables.set(\"produkCId\", pm.response.json().data._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Uji Produk C {{ts}}\",\n  \"kategori\": \"Uji\",\n  \"harga\": 1000,\n  \"stok\": 2,\n  \"stokMinimum\": 5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Tambah Produk D (stok habis)",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"ts\", String(Date.now()));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"Status habis\", () => pm.expect(pm.response.json().data.statusStok).to.eql(\"habis\"));",
+                  "pm.collectionVariables.set(\"produkDId\", pm.response.json().data._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Uji Produk D {{ts}}\",\n  \"kategori\": \"Uji\",\n  \"harga\": 1000,\n  \"stok\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Tambah produk nama duplikat -> 409",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"kodeGalat DATA_DUPLIKAT\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"DATA_DUPLIKAT\"));",
+                  "pm.test(\"Pesan\", () => pm.expect(pm.response.json().pesan).to.eql(\"Nama produk sudah terdaftar\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"{{produkANama}}\",\n  \"kategori\": \"Uji\",\n  \"harga\": 1000,\n  \"stok\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Tambah produk barcode duplikat -> 409",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"ts\", String(Date.now()));"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"kodeGalat DATA_DUPLIKAT\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"DATA_DUPLIKAT\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Uji Barcode Kembar {{ts}}\",\n  \"kategori\": \"Uji\",\n  \"harga\": 1000,\n  \"barcode\": \"{{produkABarcode}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Tambah produk harga negatif & stok negatif -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));",
+                  "pm.test(\"Galat harga & stok\", () => { const f = pm.response.json().galat.map(g => g.field); pm.expect(f).to.include.members([\"harga\", \"stok\"]); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Produk Salah\",\n  \"kategori\": \"Uji\",\n  \"harga\": -100,\n  \"stok\": -1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Tambah produk tanpa kategori & harga bukan angka -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Produk Salah 2\",\n  \"harga\": \"abc\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Tanpa token GET /produk -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat TIDAK_TERAUTENTIKASI\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_TERAUTENTIKASI\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/produk",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Daftar produk (kasir boleh)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "",
+                  "const j = pm.response.json();",
+                  "pm.test(\"Paginasi meta\", () => { pm.expect(j.data.length).to.be.at.most(5); pm.expect(j.meta).to.include.keys(\"halaman\", \"perHalaman\", \"total\", \"totalHalaman\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk?perHalaman=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk"
+              ],
+              "query": [
+                {
+                  "key": "perHalaman",
+                  "value": "5"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cari produk berdasarkan nama & kategori",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Menemukan Produk A\", () => pm.expect(pm.response.json().data.map(p => p._id)).to.include(pm.collectionVariables.get(\"produkAId\")));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk?cari=Uji Produk A&kategori=Uji",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk"
+              ],
+              "query": [
+                {
+                  "key": "cari",
+                  "value": "Uji Produk A"
+                },
+                {
+                  "key": "kategori",
+                  "value": "Uji"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Filter statusStok=habis",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Semua habis\", () => pm.expect(pm.response.json().data.every(p => p.stok === 0)).to.eql(true));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk?statusStok=habis&kategori=Uji",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk"
+              ],
+              "query": [
+                {
+                  "key": "statusStok",
+                  "value": "habis"
+                },
+                {
+                  "key": "kategori",
+                  "value": "Uji"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Pencarian dengan karakter regex tidak error",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Tidak ada hasil, bukan 500\", () => pm.expect(pm.response.json().data).to.be.an(\"array\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk?cari=((",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk"
+              ],
+              "query": [
+                {
+                  "key": "cari",
+                  "value": "(("
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detail produk",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Produk A\", () => pm.expect(pm.response.json().data._id).to.eql(pm.collectionVariables.get(\"produkAId\")));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkAId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkAId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cari berdasarkan barcode",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/barcode/{{produkABarcode}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "barcode",
+                "{{produkABarcode}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Barcode tidak ada -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"kodeGalat TIDAK_DITEMUKAN\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_DITEMUKAN\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/barcode/TIDAKADA000",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "barcode",
+                "TIDAKADA000"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detail produk ID tidak valid -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"kodeGalat TIDAK_DITEMUKAN\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_DITEMUKAN\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/bukan-id",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "bukan-id"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Stok menipis (pemilik, terurut naik) (E2E-08)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "",
+                  "const d = pm.response.json().data;",
+                  "pm.test(\"Semua stok <= stokMinimum\", () => pm.expect(d.every(p => p.stok <= p.stokMinimum)).to.eql(true));",
+                  "pm.test(\"Terurut dari stok terkecil\", () => pm.expect(d.every((p, i) => i === 0 || d[i-1].stok <= p.stok)).to.eql(true));",
+                  "pm.test(\"Produk C muncul\", () => pm.expect(d.map(p => p._id)).to.include(pm.collectionVariables.get(\"produkCId\")));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/stok-menipis",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "stok-menipis"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Ubah data produk B (PUT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Kategori berubah\", () => pm.expect(pm.response.json().data.kategori).to.eql(\"Uji Ubah\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkBId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkBId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"kategori\": \"Uji Ubah\",\n  \"stokMinimum\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Ubah produk harga negatif -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkBId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkBId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"harga\": -5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Kasir POST /produk -> 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"kodeGalat AKSES_DITOLAK\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"AKSES_DITOLAK\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Ilegal\",\n  \"kategori\": \"X\",\n  \"harga\": 100\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Tanpa token POST /produk -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat TIDAK_TERAUTENTIKASI\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_TERAUTENTIKASI\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Ilegal\",\n  \"kategori\": \"X\",\n  \"harga\": 100\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Kasir PUT /produk/:id -> 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"kodeGalat AKSES_DITOLAK\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"AKSES_DITOLAK\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkAId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkAId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"harga\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Tanpa token PUT /produk/:id -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat TIDAK_TERAUTENTIKASI\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_TERAUTENTIKASI\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkAId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkAId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"harga\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Kasir DELETE /produk/:id -> 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"kodeGalat AKSES_DITOLAK\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"AKSES_DITOLAK\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkAId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkAId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Tanpa token DELETE /produk/:id -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat TIDAK_TERAUTENTIKASI\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_TERAUTENTIKASI\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkAId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkAId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Kasir GET stok-menipis -> 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"kodeGalat AKSES_DITOLAK\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"AKSES_DITOLAK\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/stok-menipis",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "stok-menipis"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Tanpa token GET stok-menipis -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat TIDAK_TERAUTENTIKASI\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_TERAUTENTIKASI\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/produk/stok-menipis",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "stok-menipis"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Kasir opname -> 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"kodeGalat AKSES_DITOLAK\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"AKSES_DITOLAK\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkBId}}/opname",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkBId}}",
+                "opname"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stokFisik\": 1,\n  \"alasan\": \"hilang\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Opname tanpa alasan -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkBId}}/opname",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkBId}}",
+                "opname"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stokFisik\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Opname alasan di luar daftar -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkBId}}/opname",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkBId}}",
+                "opname"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stokFisik\": 4,\n  \"alasan\": \"iseng\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Opname stok fisik negatif -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkBId}}/opname",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkBId}}",
+                "opname"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stokFisik\": -1,\n  \"alasan\": \"hilang\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Opname Produk B: 5 -> 4 (rusak)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "",
+                  "const d = pm.response.json().data;",
+                  "pm.test(\"Stok = stok fisik, selisih -1\", () => { pm.expect(d.produk.stok).to.eql(4); pm.expect(d.selisih).to.eql(-1); });",
+                  "pm.test(\"Mutasi bertipe koreksi\", () => { pm.expect(d.mutasi.tipe).to.eql(\"koreksi\"); pm.expect(d.mutasi.alasan).to.eql(\"rusak\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkBId}}/opname",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkBId}}",
+                "opname"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stokFisik\": 4,\n  \"alasan\": \"rusak\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Opname Produk B: 4 -> 5 (stok masuk)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Mutasi bertipe masuk\", () => pm.expect(pm.response.json().data.mutasi.tipe).to.eql(\"masuk\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkBId}}/opname",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkBId}}",
+                "opname"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stokFisik\": 5,\n  \"alasan\": \"stok masuk\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Riwayat mutasi Produk B",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "",
+                  "const d = pm.response.json().data;",
+                  "pm.test(\"2 mutasi opname tercatat lengkap\", () => { pm.expect(d.length).to.eql(2); pm.expect(d[0]).to.include.keys(\"stokSebelum\", \"stokSesudah\", \"alasan\", \"userId\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkBId}}/mutasi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkBId}}",
+                "mutasi"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Kasir GET mutasi -> 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"kodeGalat AKSES_DITOLAK\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"AKSES_DITOLAK\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkBId}}/mutasi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkBId}}",
+                "mutasi"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 - Transaksi & Kasir",
+      "description": "US-09, US-10, US-11, US-14 | FR-11..FR-15, FR-20, FR-32, BR-01..BR-06, BR-10..BR-12",
+      "item": [
+        {
+          "name": "Kasir buat transaksi tunai: A x3 + B x2 (E2E-03)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"sukses = true\", () => pm.expect(pm.response.json().sukses).to.eql(true));",
+                  "",
+                  "const t = pm.response.json().data;",
+                  "pm.test(\"Total dihitung server: 3x5000 + 2x2500 = 20000\", () => pm.expect(t.total).to.eql(20000));",
+                  "pm.test(\"Kembalian 30000\", () => pm.expect(t.kembalian).to.eql(30000));",
+                  "pm.test(\"Status berhasil & nomor transaksi format TRX-YYYYMMDD-NNNN\", () => { pm.expect(t.statusBayar).to.eql(\"berhasil\"); pm.expect(t.nomorTransaksi).to.match(/^TRX-\\d{8}-\\d{4}$/); });",
+                  "pm.test(\"kasirId tercatat\", () => pm.expect(t.kasirId).to.eql(pm.collectionVariables.get(\"kasirId\")));",
+                  "pm.test(\"hargaSaat dibekukan\", () => pm.expect(t.items[0].hargaSaat).to.eql(5000));",
+                  "pm.collectionVariables.set(\"trxTunaiId\", t._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"productId\": \"{{produkAId}}\",\n      \"qty\": 3\n    },\n    {\n      \"productId\": \"{{produkBId}}\",\n      \"qty\": 2\n    }\n  ],\n  \"metodeBayar\": \"tunai\",\n  \"nominalBayar\": 50000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Cek stok A berkurang tepat 3 (10 -> 7)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Stok A = 7\", () => pm.expect(pm.response.json().data.stok).to.eql(7));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkAId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkAId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cek stok B berkurang tepat 2 (5 -> 3)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Stok B = 3\", () => pm.expect(pm.response.json().data.stok).to.eql(3));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkBId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkBId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Mutasi 'keluar' tercatat untuk penjualan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "",
+                  "const m = pm.response.json().data[0];",
+                  "pm.test(\"Mutasi keluar 3, alasan penjualan, refId = transaksi\", () => { pm.expect(m.tipe).to.eql(\"keluar\"); pm.expect(m.jumlah).to.eql(3); pm.expect(m.alasan).to.eql(\"penjualan\"); pm.expect(m.refId).to.eql(pm.collectionVariables.get(\"trxTunaiId\")); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkAId}}/mutasi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkAId}}",
+                "mutasi"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Beli 100 unit dari stok 3 -> ditolak (E2E-04)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat STOK_TIDAK_CUKUP\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"STOK_TIDAK_CUKUP\"));",
+                  "pm.test(\"Pesan menyebut sisa stok\", () => pm.expect(pm.response.json().pesan).to.include(\"tersisa 3\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"productId\": \"{{produkBId}}\",\n      \"qty\": 100\n    }\n  ],\n  \"metodeBayar\": \"tunai\",\n  \"nominalBayar\": 999999\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Transaksi campuran (A x1 valid + B x100) -> tidak tersimpan sebagian (BR-02)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat STOK_TIDAK_CUKUP\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"STOK_TIDAK_CUKUP\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"productId\": \"{{produkAId}}\",\n      \"qty\": 1\n    },\n    {\n      \"productId\": \"{{produkBId}}\",\n      \"qty\": 100\n    }\n  ],\n  \"metodeBayar\": \"tunai\",\n  \"nominalBayar\": 999999\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Stok A tetap 7 (atomik)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Stok A = 7\", () => pm.expect(pm.response.json().data.stok).to.eql(7));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkAId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkAId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Stok B tetap 3 (tidak berubah)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Stok B = 3\", () => pm.expect(pm.response.json().data.stok).to.eql(3));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkBId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkBId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Produk stok 0 tidak bisa dibeli (BR-06)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat STOK_TIDAK_CUKUP\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"STOK_TIDAK_CUKUP\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"productId\": \"{{produkDId}}\",\n      \"qty\": 1\n    }\n  ],\n  \"metodeBayar\": \"tunai\",\n  \"nominalBayar\": 5000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Keranjang kosong -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));",
+                  "pm.test(\"Pesan\", () => pm.expect(pm.response.json().pesan).to.eql(\"Keranjang masih kosong\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [],\n  \"metodeBayar\": \"tunai\",\n  \"nominalBayar\": 1000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Qty negatif -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"productId\": \"{{produkAId}}\",\n      \"qty\": -5\n    }\n  ],\n  \"metodeBayar\": \"tunai\",\n  \"nominalBayar\": 100000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Qty pecahan -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"productId\": \"{{produkAId}}\",\n      \"qty\": 1.5\n    }\n  ],\n  \"metodeBayar\": \"tunai\",\n  \"nominalBayar\": 100000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "productId tidak valid -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"productId\": \"abc\",\n      \"qty\": 1\n    }\n  ],\n  \"metodeBayar\": \"tunai\",\n  \"nominalBayar\": 100000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Produk tidak ada -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"kodeGalat TIDAK_DITEMUKAN\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_DITEMUKAN\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"productId\": \"000000000000000000000000\",\n      \"qty\": 1\n    }\n  ],\n  \"metodeBayar\": \"tunai\",\n  \"nominalBayar\": 100000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Metode bayar tidak valid -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"productId\": \"{{produkAId}}\",\n      \"qty\": 1\n    }\n  ],\n  \"metodeBayar\": \"kredit\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Nominal bayar kurang dari total -> 400 (BR-11)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));",
+                  "pm.test(\"Pesan\", () => pm.expect(pm.response.json().pesan).to.eql(\"Nominal pembayaran kurang dari total\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"productId\": \"{{produkAId}}\",\n      \"qty\": 1\n    }\n  ],\n  \"metodeBayar\": \"tunai\",\n  \"nominalBayar\": 100\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Total dari frontend diabaikan (BR-05)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"Total memakai harga DB (1000)\", () => pm.expect(pm.response.json().data.total).to.eql(1000));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"productId\": \"{{produkCId}}\",\n      \"qty\": 1,\n      \"hargaSaat\": 1,\n      \"subtotal\": 1\n    }\n  ],\n  \"total\": 1,\n  \"metodeBayar\": \"tunai\",\n  \"nominalBayar\": 1000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Transaksi tanpa token -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat TIDAK_TERAUTENTIKASI\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_TERAUTENTIKASI\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"productId\": \"{{produkAId}}\",\n      \"qty\": 1\n    }\n  ],\n  \"metodeBayar\": \"tunai\",\n  \"nominalBayar\": 9999\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Pemilik ubah harga Produk A: 5000 -> 6000 (E2E-09)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Harga baru\", () => pm.expect(pm.response.json().data.harga).to.eql(6000));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkAId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkAId}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"harga\": 6000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Transaksi lama tetap memakai harga lama",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"hargaSaat 5000 & total 20000 tidak berubah\", () => { const t = pm.response.json().data; pm.expect(t.items[0].hargaSaat).to.eql(5000); pm.expect(t.total).to.eql(20000); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi/{{trxTunaiId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi",
+                "{{trxTunaiId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Pemilik buat transaksi tunai: A x1 (harga baru)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.test(\"Total memakai harga baru 6000\", () => pm.expect(pm.response.json().data.total).to.eql(6000));",
+                  "pm.collectionVariables.set(\"trxPemilikId\", pm.response.json().data._id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"productId\": \"{{produkAId}}\",\n      \"qty\": 1\n    }\n  ],\n  \"metodeBayar\": \"tunai\",\n  \"nominalBayar\": 10000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Kasir lihat riwayat: hanya milik sendiri (E2E, BR-10)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "",
+                  "const j = pm.response.json();",
+                  "pm.test(\"Semua transaksi milik kasir\", () => pm.expect(j.data.every(t => t.kasirId === pm.collectionVariables.get(\"kasirId\"))).to.eql(true));",
+                  "pm.test(\"Transaksi pemilik tidak muncul\", () => pm.expect(j.data.map(t => t._id)).to.not.include(pm.collectionVariables.get(\"trxPemilikId\")));",
+                  "pm.test(\"Meta paginasi\", () => pm.expect(j.meta).to.include.keys(\"halaman\", \"perHalaman\", \"total\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Pemilik lihat riwayat: semua transaksi",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Memuat transaksi pemilik & kasir\", () => { const ids = pm.response.json().data.map(t => t._id); pm.expect(ids).to.include.members([pm.collectionVariables.get(\"trxPemilikId\"), pm.collectionVariables.get(\"trxTunaiId\")]); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Riwayat dengan filter rentang tanggal & perHalaman=1",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"perHalaman 1\", () => pm.expect(pm.response.json().data.length).to.eql(1));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi?tanggalMulai=2026-01-01&tanggalAkhir=2026-12-31&perHalaman=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ],
+              "query": [
+                {
+                  "key": "tanggalMulai",
+                  "value": "2026-01-01"
+                },
+                {
+                  "key": "tanggalAkhir",
+                  "value": "2026-12-31"
+                },
+                {
+                  "key": "perHalaman",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Riwayat dengan rentang tanggal terbalik -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi?tanggalMulai=2026-12-31&tanggalAkhir=2026-01-01",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ],
+              "query": [
+                {
+                  "key": "tanggalMulai",
+                  "value": "2026-12-31"
+                },
+                {
+                  "key": "tanggalAkhir",
+                  "value": "2026-01-01"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Riwayat dengan format tanggal salah -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi?tanggalMulai=31-12-2026",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ],
+              "query": [
+                {
+                  "key": "tanggalMulai",
+                  "value": "31-12-2026"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Kasir lihat detail transaksi sendiri",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi/{{trxTunaiId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi",
+                "{{trxTunaiId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Kasir lihat transaksi milik pemilik -> 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"kodeGalat AKSES_DITOLAK\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"AKSES_DITOLAK\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi/{{trxPemilikId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi",
+                "{{trxPemilikId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Pemilik lihat transaksi kasir",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi/{{trxTunaiId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi",
+                "{{trxTunaiId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detail transaksi tidak ada -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"kodeGalat TIDAK_DITEMUKAN\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_DITEMUKAN\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi/000000000000000000000000",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi",
+                "000000000000000000000000"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Riwayat tanpa token -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat TIDAK_TERAUTENTIKASI\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_TERAUTENTIKASI\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[QRIS] Cek stok A sebelum",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set(\"stokASebelumQris\", pm.response.json().data.stok);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkAId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkAId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[QRIS] Buat transaksi QRIS -> menunggu",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "",
+                  "const t = pm.response.json().data;",
+                  "pm.test(\"statusBayar menunggu\", () => pm.expect(t.statusBayar).to.eql(\"menunggu\"));",
+                  "pm.collectionVariables.set(\"trxQrisId\", t._id); pm.collectionVariables.set(\"trxQrisTotal\", t.total);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"productId\": \"{{produkAId}}\",\n      \"qty\": 1\n    }\n  ],\n  \"metodeBayar\": \"qris\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[QRIS] Stok belum berkurang (BR-12)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Stok sama seperti sebelum\", () => pm.expect(pm.response.json().data.stok).to.eql(pm.collectionVariables.get(\"stokASebelumQris\")));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkAId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkAId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[QRIS] Buat sesi pembayaran QRIS",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "",
+                  "const d = pm.response.json().data;",
+                  "pm.test(\"Ada token sesi & order id\", () => { pm.expect(d.token).to.be.a(\"string\"); pm.expect(d.midtransOrderId).to.include(\"TRX-\"); });",
+                  "pm.collectionVariables.set(\"qrisOrderId\", d.midtransOrderId);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi/{{trxQrisId}}/bayar-qris",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi",
+                "{{trxQrisId}}",
+                "bayar-qris"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[QRIS] Bayar QRIS transaksi tunai -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi/{{trxTunaiId}}/bayar-qris",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi",
+                "{{trxTunaiId}}",
+                "bayar-qris"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[QRIS] Webhook tanda tangan salah -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat TIDAK_TERAUTENTIKASI\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_TERAUTENTIKASI\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi/webhook-midtrans",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi",
+                "webhook-midtrans"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_id\": \"{{qrisOrderId}}\",\n  \"transaction_status\": \"settlement\",\n  \"status_code\": \"200\",\n  \"gross_amount\": \"6000.00\",\n  \"signature_key\": \"palsu\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[QRIS] Webhook settlement (tanda tangan valid) -> berhasil",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"qrisTotal\", pm.collectionVariables.get(\"trxQrisTotal\"));",
+                  "const orderId = pm.collectionVariables.get(\"qrisOrderId\");",
+                  "const gross = Number(pm.collectionVariables.get(\"qrisTotal\")).toFixed(2);",
+                  "const key = pm.variables.get(\"midtransServerKey\");",
+                  "pm.collectionVariables.set(\"qrisGross\", gross);",
+                  "pm.collectionVariables.set(\"qrisSignature\", CryptoJS.SHA512(orderId + \"200\" + gross + key).toString());"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"sukses = true\", () => pm.expect(pm.response.json().sukses).to.eql(true));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi/webhook-midtrans",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi",
+                "webhook-midtrans"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_id\": \"{{qrisOrderId}}\",\n  \"transaction_status\": \"settlement\",\n  \"status_code\": \"200\",\n  \"gross_amount\": \"{{qrisGross}}\",\n  \"signature_key\": \"{{qrisSignature}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[QRIS] Transaksi menjadi 'berhasil'",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"berhasil\", () => pm.expect(pm.response.json().data.statusBayar).to.eql(\"berhasil\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi/{{trxQrisId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi",
+                "{{trxQrisId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[QRIS] Stok berkurang 1 setelah bayar",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"stok = sebelum - 1\", () => pm.expect(pm.response.json().data.stok).to.eql(pm.collectionVariables.get(\"stokASebelumQris\") - 1));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkAId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkAId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[QRIS] Webhook diulang tidak mengurangi stok dua kali",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const orderId = pm.collectionVariables.get(\"qrisOrderId\");",
+                  "const gross = Number(pm.collectionVariables.get(\"qrisTotal\")).toFixed(2);",
+                  "const key = pm.variables.get(\"midtransServerKey\");",
+                  "pm.collectionVariables.set(\"qrisGross\", gross);",
+                  "pm.collectionVariables.set(\"qrisSignature\", CryptoJS.SHA512(orderId + \"200\" + gross + key).toString());"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi/webhook-midtrans",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi",
+                "webhook-midtrans"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_id\": \"{{qrisOrderId}}\",\n  \"transaction_status\": \"settlement\",\n  \"status_code\": \"200\",\n  \"gross_amount\": \"{{qrisGross}}\",\n  \"signature_key\": \"{{qrisSignature}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[QRIS] Stok tetap (idempoten)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"stok = sebelum - 1\", () => pm.expect(pm.response.json().data.stok).to.eql(pm.collectionVariables.get(\"stokASebelumQris\") - 1));",
+                  "pm.collectionVariables.set(\"stokASetelahQris\", pm.response.json().data.stok);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkAId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkAId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[QRIS] Transaksi QRIS kedua (akan kedaluwarsa)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 201\", () => pm.response.to.have.status(201));",
+                  "pm.collectionVariables.set(\"trxQris2Id\", pm.response.json().data._id); pm.collectionVariables.set(\"trxQris2Total\", pm.response.json().data.total);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"productId\": \"{{produkAId}}\",\n      \"qty\": 1\n    }\n  ],\n  \"metodeBayar\": \"qris\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[QRIS] Sesi QRIS kedua",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set(\"qrisOrderId\", pm.response.json().data.midtransOrderId);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi/{{trxQris2Id}}/bayar-qris",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi",
+                "{{trxQris2Id}}",
+                "bayar-qris"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[QRIS] Webhook expire -> dibatalkan, stok tidak berubah",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set(\"qrisTotal\", pm.collectionVariables.get(\"trxQris2Total\"));",
+                  "const orderId = pm.collectionVariables.get(\"qrisOrderId\");",
+                  "const gross = Number(pm.collectionVariables.get(\"qrisTotal\")).toFixed(2);",
+                  "const key = pm.variables.get(\"midtransServerKey\");",
+                  "pm.collectionVariables.set(\"qrisGross\", gross);",
+                  "pm.collectionVariables.set(\"qrisSignature\", CryptoJS.SHA512(orderId + \"200\" + gross + key).toString());"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi/webhook-midtrans",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi",
+                "webhook-midtrans"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"order_id\": \"{{qrisOrderId}}\",\n  \"transaction_status\": \"expire\",\n  \"status_code\": \"200\",\n  \"gross_amount\": \"{{qrisGross}}\",\n  \"signature_key\": \"{{qrisSignature}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "[QRIS] Transaksi kedua berstatus dibatalkan",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"dibatalkan\", () => pm.expect(pm.response.json().data.statusBayar).to.eql(\"dibatalkan\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi/{{trxQris2Id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi",
+                "{{trxQris2Id}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[QRIS] Stok A tidak berubah",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"stok sama\", () => pm.expect(pm.response.json().data.stok).to.eql(pm.collectionVariables.get(\"stokASetelahQris\")));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkAId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkAId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 - Laporan & Ekspor",
+      "description": "US-05, US-06, US-12 | FR-16..FR-19, FR-21, BR-13",
+      "item": [
+        {
+          "name": "Ringkasan dashboard",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "",
+                  "const d = pm.response.json().data;",
+                  "pm.test(\"Bidang ringkasan bertipe angka\", () => { [\"omzetHariIni\", \"jumlahTransaksiHariIni\", \"rataRataNilaiTransaksi\", \"jumlahProdukStokMenipis\"].forEach(k => pm.expect(d[k]).to.be.a(\"number\")); });",
+                  "pm.test(\"Omzet mencakup transaksi uji (>= 20000+6000+6000+1000)\", () => pm.expect(d.omzetHariIni).to.be.at.least(33000));",
+                  "pm.test(\"Rata-rata masuk akal\", () => pm.expect(d.rataRataNilaiTransaksi).to.eql(Math.round(d.omzetHariIni / d.jumlahTransaksiHariIni)));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/ringkasan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "ringkasan"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Omzet harian (hari ini)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "",
+                  "const d = pm.response.json().data;",
+                  "pm.test(\"Satu baris untuk hari ini\", () => { pm.expect(d.length).to.eql(1); pm.expect(d[0].tanggal).to.match(/^\\d{4}-\\d{2}-\\d{2}$/); pm.expect(d[0].totalOmzet).to.be.at.least(33000); });",
+                  "pm.test(\"Transaksi dibatalkan tidak dihitung\", () => pm.expect(d[0].jumlahTransaksi).to.be.a(\"number\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/omzet-harian",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "omzet-harian"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Omzet harian rentang panjang",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Array\", () => pm.expect(pm.response.json().data).to.be.an(\"array\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/omzet-harian?tanggalMulai=2026-01-01&tanggalAkhir=2026-12-31",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "omzet-harian"
+              ],
+              "query": [
+                {
+                  "key": "tanggalMulai",
+                  "value": "2026-01-01"
+                },
+                {
+                  "key": "tanggalAkhir",
+                  "value": "2026-12-31"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Omzet harian hari tanpa transaksi -> array kosong (bukan NaN)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Kosong\", () => pm.expect(pm.response.json().data).to.eql([]));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/omzet-harian?tanggalMulai=2000-01-01&tanggalAkhir=2000-01-02",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "omzet-harian"
+              ],
+              "query": [
+                {
+                  "key": "tanggalMulai",
+                  "value": "2000-01-01"
+                },
+                {
+                  "key": "tanggalAkhir",
+                  "value": "2000-01-02"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Omzet harian rentang terbalik -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/omzet-harian?tanggalMulai=2026-12-31&tanggalAkhir=2026-01-01",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "omzet-harian"
+              ],
+              "query": [
+                {
+                  "key": "tanggalMulai",
+                  "value": "2026-12-31"
+                },
+                {
+                  "key": "tanggalAkhir",
+                  "value": "2026-01-01"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Omzet harian rentang > 365 hari -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/omzet-harian?tanggalMulai=2024-01-01&tanggalAkhir=2026-01-01",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "omzet-harian"
+              ],
+              "query": [
+                {
+                  "key": "tanggalMulai",
+                  "value": "2024-01-01"
+                },
+                {
+                  "key": "tanggalAkhir",
+                  "value": "2026-01-01"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Omzet harian tanggal tidak ada (31 Feb) -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/omzet-harian?tanggalMulai=2026-02-31",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "omzet-harian"
+              ],
+              "query": [
+                {
+                  "key": "tanggalMulai",
+                  "value": "2026-02-31"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Produk terlaris (limit 50)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "",
+                  "const d = pm.response.json().data;",
+                  "pm.test(\"Terurut menurun berdasarkan kuantitas\", () => pm.expect(d.every((p, i) => i === 0 || d[i-1].totalTerjual >= p.totalTerjual)).to.eql(true));",
+                  "pm.test(\"Memuat nama, kuantitas, kontribusi omzet\", () => pm.expect(d[0]).to.include.keys(\"namaProduk\", \"totalTerjual\", \"totalOmzet\"));",
+                  "pm.test(\"Produk A terjual 3+1+1 = 5\", () => { const a = d.find(p => p.productId === pm.collectionVariables.get(\"produkAId\")); pm.expect(a.totalTerjual).to.eql(5); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/produk-terlaris?limit=50",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "produk-terlaris"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "50"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Produk terlaris default maksimal 10",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"<= 10\", () => pm.expect(pm.response.json().data.length).to.be.at.most(10));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/produk-terlaris",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "produk-terlaris"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Ekspor Excel",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "",
+                  "pm.test(\"Content-Type xlsx\", () => pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"spreadsheetml\"));",
+                  "pm.test(\"Nama berkas memuat rentang tanggal\", () => pm.expect(pm.response.headers.get(\"Content-Disposition\")).to.include(\"laporan-laris-2026-01-01_2026-12-31.xlsx\"));",
+                  "pm.test(\"Berkas tidak kosong\", () => pm.expect(pm.response.responseSize).to.be.above(1000));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/ekspor?format=xlsx&tanggalMulai=2026-01-01&tanggalAkhir=2026-12-31",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "ekspor"
+              ],
+              "query": [
+                {
+                  "key": "format",
+                  "value": "xlsx"
+                },
+                {
+                  "key": "tanggalMulai",
+                  "value": "2026-01-01"
+                },
+                {
+                  "key": "tanggalAkhir",
+                  "value": "2026-12-31"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Ekspor PDF",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "",
+                  "pm.test(\"Content-Type pdf\", () => pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/pdf\"));",
+                  "pm.test(\"Berkas tidak kosong\", () => pm.expect(pm.response.responseSize).to.be.above(500));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/ekspor?format=pdf&tanggalMulai=2026-01-01&tanggalAkhir=2026-12-31",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "ekspor"
+              ],
+              "query": [
+                {
+                  "key": "format",
+                  "value": "pdf"
+                },
+                {
+                  "key": "tanggalMulai",
+                  "value": "2026-01-01"
+                },
+                {
+                  "key": "tanggalAkhir",
+                  "value": "2026-12-31"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Ekspor format tidak dikenal -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/ekspor?format=docx",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "ekspor"
+              ],
+              "query": [
+                {
+                  "key": "format",
+                  "value": "docx"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cache: panggilan 1 (mengisi cache)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.collectionVariables.set(\"waktuCache1\", pm.response.responseTime); console.log(\"Panggilan 1: \" + pm.response.responseTime + \" ms\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/produk-terlaris?limit=7",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "produk-terlaris"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "7"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Cache: panggilan 2 (dari cache, E2E-11)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "console.log(\"Panggilan 2: \" + pm.response.responseTime + \" ms (panggilan 1: \" + pm.collectionVariables.get(\"waktuCache1\") + \" ms)\");",
+                  "pm.test(\"Respons sama\", () => pm.expect(pm.response.json().data).to.be.an(\"array\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/produk-terlaris?limit=7",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "produk-terlaris"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "7"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Kasir GET ringkasan -> 403 (E2E-06)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"kodeGalat AKSES_DITOLAK\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"AKSES_DITOLAK\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/ringkasan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "ringkasan"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Tanpa token GET ringkasan -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat TIDAK_TERAUTENTIKASI\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_TERAUTENTIKASI\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/ringkasan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "ringkasan"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Kasir GET omzet-harian -> 403 (E2E-06)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"kodeGalat AKSES_DITOLAK\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"AKSES_DITOLAK\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/omzet-harian",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "omzet-harian"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Tanpa token GET omzet-harian -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat TIDAK_TERAUTENTIKASI\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_TERAUTENTIKASI\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/omzet-harian",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "omzet-harian"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Kasir GET produk-terlaris -> 403 (E2E-06)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"kodeGalat AKSES_DITOLAK\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"AKSES_DITOLAK\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/produk-terlaris",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "produk-terlaris"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Tanpa token GET produk-terlaris -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat TIDAK_TERAUTENTIKASI\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_TERAUTENTIKASI\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/produk-terlaris",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "produk-terlaris"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Kasir GET ekspor -> 403 (E2E-06)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"kodeGalat AKSES_DITOLAK\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"AKSES_DITOLAK\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/ekspor",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "ekspor"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Tanpa token GET ekspor -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat TIDAK_TERAUTENTIKASI\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_TERAUTENTIKASI\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/ekspor",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "ekspor"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 - Pengaturan Toko",
+      "description": "FR-29",
+      "item": [
+        {
+          "name": "Baca pengaturan (kasir boleh)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Ada namaToko\", () => pm.expect(pm.response.json().data.namaToko).to.be.a(\"string\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pengaturan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pengaturan"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Ubah pengaturan (pemilik)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"sukses = true\", () => pm.expect(pm.response.json().sukses).to.eql(true));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pengaturan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pengaturan"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"namaToko\": \"Toko Kelontong Berkah\",\n  \"stokMinimumDefault\": 5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Ubah pengaturan stokMinimumDefault negatif -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pengaturan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pengaturan"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"stokMinimumDefault\": -1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Kasir ubah pengaturan -> 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"kodeGalat AKSES_DITOLAK\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"AKSES_DITOLAK\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pengaturan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pengaturan"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"namaToko\": \"Retas\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Tanpa token baca pengaturan -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat TIDAK_TERAUTENTIKASI\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_TERAUTENTIKASI\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/pengaturan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pengaturan"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Kasir GET /users -> 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"kodeGalat AKSES_DITOLAK\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"AKSES_DITOLAK\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Tanpa token GET /users -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat TIDAK_TERAUTENTIKASI\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_TERAUTENTIKASI\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Kasir POST /users -> 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"kodeGalat AKSES_DITOLAK\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"AKSES_DITOLAK\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Kasir X\",\n  \"email\": \"x@laris.com\",\n  \"password\": \"rahasia123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Tanpa token POST /users -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat TIDAK_TERAUTENTIKASI\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_TERAUTENTIKASI\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Kasir X\",\n  \"email\": \"x@laris.com\",\n  \"password\": \"rahasia123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Kasir DELETE /users/:id -> 403",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 403\", () => pm.response.to.have.status(403));",
+                  "pm.test(\"kodeGalat AKSES_DITOLAK\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"AKSES_DITOLAK\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{kasirBaruId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{kasirBaruId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Tanpa token DELETE /users/:id -> 401",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"kodeGalat TIDAK_TERAUTENTIKASI\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_TERAUTENTIKASI\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/users/{{kasirBaruId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "users",
+                "{{kasirBaruId}}"
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 - Hapus Produk (Soft Delete)",
+      "description": "US-02 #4, US-06 #3, BR-04 | E2E-10",
+      "item": [
+        {
+          "name": "Produk C (pernah terjual) masih ada di katalog",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkCId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkCId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Pemilik hapus Produk C yang pernah terjual",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"sukses = true\", () => pm.expect(pm.response.json().sukses).to.eql(true));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkCId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkCId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Produk C hilang dari katalog",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Tidak ada di katalog\", () => pm.expect(pm.response.json().data.length).to.eql(0));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk?cari=Uji Produk C",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk"
+              ],
+              "query": [
+                {
+                  "key": "cari",
+                  "value": "Uji Produk C"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Detail Produk C -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"kodeGalat TIDAK_DITEMUKAN\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_DITEMUKAN\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkCId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkCId}}"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Produk C tidak bisa dibeli lagi",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"kodeGalat TIDAK_DITEMUKAN\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_DITEMUKAN\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"items\": [\n    {\n      \"productId\": \"{{produkCId}}\",\n      \"qty\": 1\n    }\n  ],\n  \"metodeBayar\": \"tunai\",\n  \"nominalBayar\": 1000\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Produk C tetap ada di laporan terlaris dengan '(nonaktif)'",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Nama diberi penanda (nonaktif)\", () => { const c = pm.response.json().data.find(p => p.productId === pm.collectionVariables.get(\"produkCId\")); pm.expect(c).to.not.equal(undefined); pm.expect(c.namaProduk).to.include(\"(nonaktif)\"); });"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/laporan/produk-terlaris?limit=100",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "laporan",
+                "produk-terlaris"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "100"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Hapus produk yang sudah dihapus -> 404",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"kodeGalat TIDAK_DITEMUKAN\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"TIDAK_DITEMUKAN\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenPemilik}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/produk/{{produkCId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "produk",
+                "{{produkCId}}"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000/api"
+    },
+    {
+      "key": "serverUrl",
+      "value": "http://localhost:5000"
+    },
+    {
+      "key": "midtransServerKey",
+      "value": "SB-Mid-server-placeholder"
+    }
+  ]
 }
