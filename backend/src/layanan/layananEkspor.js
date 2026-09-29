@@ -75,7 +75,6 @@ const eksporExcel = async (tanggalMulaiStr, tanggalAkhirStr, res) => {
 };
 
 const eksporPdf = async (tanggalMulaiStr, tanggalAkhirStr, res) => {
-  const { mulai, akhir } = getRentangTanggalUTC(tanggalMulaiStr, tanggalAkhirStr);
   const omzetHarian = await getOmzetHarian(tanggalMulaiStr, tanggalAkhirStr);
   const produkTerlaris = await getProdukTerlaris(10, tanggalMulaiStr, tanggalAkhirStr);
 
