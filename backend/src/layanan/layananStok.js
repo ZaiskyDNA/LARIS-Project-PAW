@@ -2,52 +2,69 @@ const Produk = require('../model/Produk');
 const MutasiStok = require('../model/MutasiStok');
 const { bersihkanCacheLaporan } = require('../konfigurasi/cache');
 
-const prosesPenguranganStokTransaksi = async (items, userId, refId) => {
-  for (const item of items) {
-    const produk = await Produk.findOne({ _id: item.productId, isAktif: true });
-    if (!produk) {
-      throw new Error(`Produk dengan ID ${item.productId} tidak ditemukan`);
-    }
-    if (produk.stok < item.qty) {
-      const err = new Error(`Stok ${produk.nama} tidak mencukupi (tersisa ${produk.stok})`);
-      err.kodeGalat = 'STOK_TIDAK_CUKUP';
-      throw err;
-    }
-  }
+const galatStok = (pesan) => {
+  const err = new Error(pesan);
+  err.kodeGalat = 'STOK_TIDAK_CUKUP';
+  return err;
+};
 
-  const resMutasi = [];
+const pulihkanStok = async (itemTerkurangi) => {
+  for (const item of itemTerkurangi) {
+    await Produk.updateOne({ _id: item.productId }, { $inc: { stok: item.qty } });
+  }
+};
+
+const kurangiStokAtomik = async (items) => {
+  const terkurangi = [];
   for (const item of items) {
     const produk = await Produk.findOneAndUpdate(
-      { _id: item.productId, stok: { $gte: item.qty } },
+      { _id: item.productId, isAktif: true, stok: { $gte: item.qty } },
       { $inc: { stok: -item.qty } },
       { new: true }
     );
 
     if (!produk) {
-      const err = new Error(`Stok produk tidak mencukupi saat proses transaksi`);
-      err.kodeGalat = 'STOK_TIDAK_CUKUP';
-      throw err;
+      await pulihkanStok(terkurangi);
+      const terkini = await Produk.findById(item.productId);
+      const sisa = terkini ? terkini.stok : 0;
+      throw galatStok(`Stok ${item.nama || 'produk'} tidak mencukupi (tersisa ${sisa})`);
     }
 
-    const stokSebelum = produk.stok + item.qty;
-    const stokSesudah = produk.stok;
-
-    const mutasi = await MutasiStok.create({
+    terkurangi.push({
       productId: produk._id,
-      namaProduk: produk.nama,
-      tipe: 'keluar',
-      jumlah: item.qty,
-      stokSebelum,
-      stokSesudah,
-      alasan: 'penjualan',
-      refId,
-      userId,
+      nama: produk.nama,
+      qty: item.qty,
+      stokSesudah: produk.stok,
     });
-    resMutasi.push(mutasi);
   }
+  return terkurangi;
+};
 
-  bersihkanCacheLaporan();
-  return resMutasi;
+const catatMutasiPenjualan = async (terkurangi, userId, refId) => {
+  const dokumen = terkurangi.map((item) => ({
+    productId: item.productId,
+    namaProduk: item.nama,
+    tipe: 'keluar',
+    jumlah: item.qty,
+    stokSebelum: item.stokSesudah + item.qty,
+    stokSesudah: item.stokSesudah,
+    alasan: 'penjualan',
+    refId,
+    userId,
+  }));
+  return MutasiStok.insertMany(dokumen);
+};
+
+const prosesPenguranganStokTransaksi = async (items, userId, refId) => {
+  const terkurangi = await kurangiStokAtomik(items);
+  try {
+    const mutasi = await catatMutasiPenjualan(terkurangi, userId, refId);
+    bersihkanCacheLaporan();
+    return mutasi;
+  } catch (error) {
+    await pulihkanStok(terkurangi);
+    throw error;
+  }
 };
 
 const prosesStokOpname = async (productId, stokFisik, alasan, userId) => {
@@ -71,16 +88,15 @@ const prosesStokOpname = async (productId, stokFisik, alasan, userId) => {
   await produk.save();
 
   const tipe = selisih > 0 ? 'masuk' : 'koreksi';
-  const jumlah = Math.abs(selisih);
 
   const mutasi = await MutasiStok.create({
     productId: produk._id,
     namaProduk: produk.nama,
     tipe,
-    jumlah,
+    jumlah: Math.abs(selisih),
     stokSebelum,
     stokSesudah,
-    alasan: alasan || 'opname',
+    alasan,
     userId,
   });
 
@@ -89,6 +105,9 @@ const prosesStokOpname = async (productId, stokFisik, alasan, userId) => {
 };
 
 module.exports = {
+  kurangiStokAtomik,
+  pulihkanStok,
+  catatMutasiPenjualan,
   prosesPenguranganStokTransaksi,
   prosesStokOpname,
 };
