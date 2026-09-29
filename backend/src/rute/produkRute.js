@@ -18,7 +18,6 @@ router.use(autentikasi);
 
 router.get('/', daftarProduk);
 router.get('/stok-menipis', otorisasi('pemilik'), produkStokMenipis);
-router.get('/low-stock', otorisasi('pemilik'), produkStokMenipis);
 router.get('/barcode/:kode', produkBarcode);
 router.get('/:id', detailProduk);
 
