@@ -1,10 +1,13 @@
-const buatNomorTransaksi = () => {
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const randomNum = Math.floor(1000 + Math.random() * 9000);
-  return `TRX-${year}${month}${day}-${randomNum}`;
+const Transaksi = require('../model/Transaksi');
+const { tanggalHariIni } = require('./zonaWaktu');
+
+const buatNomorTransaksi = async () => {
+  const prefix = `TRX-${tanggalHariIni().replace(/-/g, '')}-`;
+  const terakhir = await Transaksi.findOne({ nomorTransaksi: new RegExp(`^${prefix}`) })
+    .sort({ nomorTransaksi: -1 })
+    .select('nomorTransaksi');
+  const urutan = terakhir ? parseInt(terakhir.nomorTransaksi.slice(prefix.length), 10) + 1 : 1;
+  return `${prefix}${String(urutan).padStart(4, '0')}`;
 };
 
 module.exports = {
