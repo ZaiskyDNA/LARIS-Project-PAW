@@ -12,7 +12,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
+  "description": "Backend API LARIS - sistem kasir dan manajemen stok",
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
