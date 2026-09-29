@@ -1,7 +1,7 @@
 const ExcelJS = require('exceljs');
 const PDFDocument = require('pdfkit');
 const Transaksi = require('../model/Transaksi');
-const { getRentangTanggalUTC } = require('../utilitas/zonaWaktu');
+const { getRentangTanggalUTC, tanggalHariIni } = require('../utilitas/zonaWaktu');
 const { getOmzetHarian, getProdukTerlaris } = require('./layananLaporan');
 
 const eksporExcel = async (tanggalMulaiStr, tanggalAkhirStr, res) => {
@@ -15,6 +15,18 @@ const eksporExcel = async (tanggalMulaiStr, tanggalAkhirStr, res) => {
   const produkTerlaris = await getProdukTerlaris(10, tanggalMulaiStr, tanggalAkhirStr);
 
   const workbook = new ExcelJS.Workbook();
+
+  const sheetRingkasan = workbook.addWorksheet('Ringkasan');
+  sheetRingkasan.columns = [
+    { header: 'Keterangan', key: 'keterangan', width: 28 },
+    { header: 'Nilai', key: 'nilai', width: 30 },
+  ];
+  sheetRingkasan.addRows([
+    { keterangan: 'Periode', nilai: `${tanggalMulaiStr || tanggalHariIni()} s/d ${tanggalAkhirStr || tanggalHariIni()}` },
+    { keterangan: 'Jumlah Transaksi', nilai: transaksiList.length },
+    { keterangan: 'Total Omzet (Rp)', nilai: transaksiList.reduce((a, t) => a + t.total, 0) },
+  ]);
+
   const sheetOmzet = workbook.addWorksheet('Omzet Harian');
   sheetOmzet.columns = [
     { header: 'Tanggal', key: 'tanggal', width: 15 },
@@ -42,7 +54,7 @@ const eksporExcel = async (tanggalMulaiStr, tanggalAkhirStr, res) => {
   transaksiList.forEach((t) => {
     sheetDetail.addRow({
       nomorTransaksi: t.nomorTransaksi,
-      waktu: t.createdAt.toISOString(),
+      waktu: t.createdAt.toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }),
       namaKasir: t.namaKasir,
       metodeBayar: t.metodeBayar,
       total: t.total,
@@ -55,7 +67,7 @@ const eksporExcel = async (tanggalMulaiStr, tanggalAkhirStr, res) => {
   );
   res.setHeader(
     'Content-Disposition',
-    `attachment; filename=laporan-laris-${tanggalMulaiStr || 'awal'}_${tanggalAkhirStr || 'akhir'}.xlsx`
+    `attachment; filename=laporan-laris-${tanggalMulaiStr || tanggalHariIni()}_${tanggalAkhirStr || tanggalHariIni()}.xlsx`
   );
 
   await workbook.xlsx.write(res);
@@ -72,14 +84,14 @@ const eksporPdf = async (tanggalMulaiStr, tanggalAkhirStr, res) => {
   res.setHeader('Content-Type', 'application/pdf');
   res.setHeader(
     'Content-Disposition',
-    `attachment; filename=laporan-laris-${tanggalMulaiStr || 'awal'}_${tanggalAkhirStr || 'akhir'}.pdf`
+    `attachment; filename=laporan-laris-${tanggalMulaiStr || tanggalHariIni()}_${tanggalAkhirStr || tanggalHariIni()}.pdf`
   );
 
   doc.pipe(res);
 
   doc.fontSize(20).text('Laporan Penjualan LARIS', { align: 'center' });
   doc.moveDown();
-  doc.fontSize(12).text(`Periode: ${tanggalMulaiStr || 'Awal'} s/d ${tanggalAkhirStr || 'Akhir'}`);
+  doc.fontSize(12).text(`Periode: ${tanggalMulaiStr || tanggalHariIni()} s/d ${tanggalAkhirStr || tanggalHariIni()}`);
   doc.moveDown();
 
   doc.fontSize(14).text('Ringkasan Omzet Harian', { underline: true });
