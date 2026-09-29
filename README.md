@@ -47,7 +47,7 @@ Pastikan sistem Anda telah memiliki [Node.js](https://nodejs.org/) (disarankan v
 
 1. **Kloning Repositori**
    ```bash
-   git clone [URL_REPOSITORI_ANDA]
+   git clone https://github.com/ZaiskyDNA/LARIS-Project-PAW.git
    cd LARIS-Project-PAW
    ```
 
@@ -56,6 +56,7 @@ Pastikan sistem Anda telah memiliki [Node.js](https://nodejs.org/) (disarankan v
    cd backend
    npm install
    # Buat file .env berdasarkan .env.example dan lengkapi konfigurasi (MongoDB URI, JWT Secret, dll)
+   npm run seed   # data awal: owner@laris.com dan kasir@laris.com, kata sandi password123
    npm run dev
    ```
 
@@ -71,4 +72,12 @@ Pastikan sistem Anda telah memiliki [Node.js](https://nodejs.org/) (disarankan v
 
 ## 📖 Spesifikasi Lengkap (PRD)
 
-Dokumentasi komprehensif mengenai kontrak API, skema basis data, user stories, arsitektur, hingga metrik evaluasi dapat dibaca pada berkas [PRD-LARIS-v2.md](./PRD-LARIS-v2.md).
+Dokumentasi komprehensif mengenai kontrak API, skema basis data, user stories, arsitektur, hingga metrik evaluasi dapat dibaca pada berkas [PRD-LARIS-v2.md](./dokumen/PRD-LARIS-v2.md).
+
+## 📚 Dokumentasi Backend
+
+- [API Reference](./dokumen/API-Reference.md)
+- [Laporan Milestone 1 (backend)](./dokumen/laporan-milestone-1-backend.md)
+- [Laporan Pengujian](./dokumen/laporan-pengujian.md)
+- Koleksi Postman: `backend/docs/LARIS.postman_collection.json` (environment: `LARIS.postman_environment.json`)
+- Pembagian tugas: [pembagian-tugas.md](./dokumen/pembagian-tugas.md)
