@@ -6,7 +6,7 @@ const autentikasi = require('../middleware/autentikasi');
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 100,
+  max: parseInt(process.env.LOGIN_RATE_LIMIT, 10) || 20,
   message: {
     sukses: false,
     pesan: 'Terlalu banyak percobaan login, silakan coba lagi nanti',
@@ -16,7 +16,6 @@ const loginLimiter = rateLimit({
 
 router.post('/login', loginLimiter, login);
 router.get('/profil', autentikasi, getProfile);
-router.get('/me', autentikasi, getProfile);
 router.post('/logout', autentikasi, logout);
 
 module.exports = router;

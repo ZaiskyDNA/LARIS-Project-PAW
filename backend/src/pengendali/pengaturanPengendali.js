@@ -17,6 +17,23 @@ const ubahPengaturan = async (req, res, next) => {
   try {
     const { namaToko, alamat, stokMinimumDefault, mataUang } = req.body;
 
+    const galat = [];
+    if (namaToko !== undefined && (typeof namaToko !== 'string' || namaToko.trim().length < 2 || namaToko.length > 100)) {
+      galat.push({ field: 'namaToko', pesan: 'Nama toko harus 2-100 karakter' });
+    }
+    if (alamat !== undefined && (typeof alamat !== 'string' || alamat.length > 200)) {
+      galat.push({ field: 'alamat', pesan: 'Alamat maksimal 200 karakter' });
+    }
+    if (
+      stokMinimumDefault !== undefined &&
+      (!Number.isInteger(stokMinimumDefault) || stokMinimumDefault < 0 || stokMinimumDefault > 10000)
+    ) {
+      galat.push({ field: 'stokMinimumDefault', pesan: 'Stok minimum tidak valid' });
+    }
+    if (galat.length > 0) {
+      return gagal(res, 400, 'Validasi gagal', 'VALIDASI_GAGAL', galat);
+    }
+
     let pengaturan = await Pengaturan.findOne();
     if (!pengaturan) {
       pengaturan = new Pengaturan({});

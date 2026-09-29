@@ -118,11 +118,19 @@ const getProdukTerlaris = async (limit = 10, tanggalMulaiStr, tanggalAkhirStr) =
     },
     { $sort: { totalKuantitasTerjual: -1 } },
     { $limit: Number(limit) },
+    {
+      $lookup: {
+        from: Produk.collection.name,
+        localField: '_id',
+        foreignField: '_id',
+        as: 'produk',
+      },
+    },
   ]);
 
   const data = hasilAgg.map((item) => ({
     productId: item._id,
-    namaProduk: item.namaProduk,
+    namaProduk: item.produk[0] && item.produk[0].isAktif ? item.namaProduk : `${item.namaProduk} (nonaktif)`,
     totalTerjual: item.totalKuantitasTerjual,
     totalOmzet: item.totalOmzet,
   }));

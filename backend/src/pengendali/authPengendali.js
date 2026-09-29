@@ -7,11 +7,11 @@ const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    if (!email || !password) {
+    if (typeof email !== 'string' || typeof password !== 'string' || !email || !password) {
       return gagal(res, 400, 'Email dan kata sandi wajib diisi', 'VALIDASI_GAGAL');
     }
 
-    const user = await User.findOne({ email: email.toLowerCase() }).select('+password');
+    const user = await User.findOne({ email: email.trim().toLowerCase() }).select('+password');
 
     if (!user || !user.isAktif) {
       return gagal(res, 401, 'Email atau kata sandi salah', 'KREDENSIAL_SALAH');

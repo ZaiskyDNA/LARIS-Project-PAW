@@ -13,7 +13,6 @@ router.use(autentikasi);
 router.use(otorisasi('pemilik'));
 
 router.get('/ringkasan', ringkasan);
-router.get('/dashboard', ringkasan);
 router.get('/omzet-harian', omzetHarian);
 router.get('/produk-terlaris', produkTerlaris);
 router.get('/ekspor', eksporLaporan);
