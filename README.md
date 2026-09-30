@@ -2,82 +2,142 @@
 
 **Sistem Kasir & Manajemen Stok Berbasis Web untuk Toko Kelontong**
 
-LARIS adalah sebuah sistem kasir dan manajemen stok berbasis web yang dibangun untuk mengatasi permasalahan pencatatan manual pada UMKM, dengan studi kasus pada Toko Kelontong "Berkah". Proyek ini merupakan pemenuhan tugas mata kuliah Pengembangan Web Aplikasi.
+LARIS (Layanan Administrasi Ritel & Inventaris Stok) adalah sistem kasir dan manajemen stok berbasis web yang dikembangkan untuk membantu Toko Kelontong "Berkah" mengatasi permasalahan pencatatan transaksi dan inventaris yang sebelumnya dilakukan secara manual dan tidak tersinkronisasi.
 
-## 👥 Kelompok & Anggota Tim
+Aplikasi ini menyediakan satu sumber data terpusat untuk mendukung aktivitas kasir dan pemantauan toko oleh pemilik.
+
+## Kelompok & Anggota Tim
 
 **Nama Kelompok:** Kelompok 15
 
-| Peran | Nama Anggota | NIM / NPM |
-|---|---|---|
-| Backend Developer | Muhammad Zakiyyuddin Abdul Adhiim | 24/545668/TK/60719 |
-| Project Manager | Josiah Hermes | 24/543958/TK/60463 |
-| Frontend Developer | Yuki Shafa Maheswari | 24/545600/TK/60708 |
-| UI/UX Designer | Sukmawati | 24/545512/TK/60686 |
+| No | Peran | Nama Anggota | NIM / NPM |
+|---|---|---|---|
+| 1 | Project Manager | Josiah Hermes | 24/543958/TK/60463 |
+| 2 | Backend Developer | Muhammad Zakiyyuddin Abdul Adhiim | 24/545668/TK/60719 |
+| 3 | UI/UX Designer | Sukmawati | 24/545512/TK/60686 |
+| 4 | Frontend Developer | Yuki Shafa Maheswari | 24/545600/TK/60708 |
 
-## 🚀 Fitur Utama
+## Fitur Utama
 
-Sistem ini memfasilitasi dua peran pengguna, yaitu **Pemilik** dan **Kasir**, dengan fitur utama sebagai berikut:
-- **Autentikasi & Otorisasi:** Sistem login dengan JWT, pembagian akses secara ketat antara pemilik toko dan kasir.
-- **Manajemen Katalog & Stok:** Pemilik dapat melakukan CRUD produk, mengatur harga, memeriksa stok yang menipis, serta melakukan stok opname.
-- **Transaksi Penjualan:** Antarmuka kasir yang interaktif untuk melayani penjualan, dilengkapi kalkulasi kembalian otomatis dan integrasi pembayaran QRIS (Midtrans).
-- **Laporan Penjualan:** Dashboard informatif bagi pemilik toko yang menyajikan total omzet, produk terlaris, dan fitur ekspor laporan ke Excel/PDF.
-- **Audit Mutasi Stok:** Pencatatan otomatis setiap pergerakan stok (keluar/masuk) untuk mencegah selisih dan kerugian.
+LARIS memiliki dua peran utama, yaitu **Pemilik** dan **Kasir**.
 
-## 🛠️ Teknologi yang Digunakan (Tech Stack)
+- **Autentikasi & Otorisasi**  
+  Login menggunakan JWT serta pembatasan akses berdasarkan peran.
+
+- **Manajemen Pengguna**  
+  Pemilik dapat membuat, melihat, mengubah, dan menonaktifkan akun kasir.
+
+- **Manajemen Produk**  
+  Pemilik dapat menambah, mengubah, dan menonaktifkan produk menggunakan mekanisme *soft delete*.
+
+- **Manajemen Stok**  
+  Menampilkan stok terkini, peringatan stok menipis, stok opname, serta riwayat mutasi stok.
+
+- **Transaksi Penjualan**  
+  Mendukung transaksi multi-item, perhitungan total dan kembalian di server, serta pengurangan stok otomatis.
+
+- **Pembayaran QRIS**  
+  Integrasi Midtrans Sandbox dan webhook untuk pembayaran non-tunai.
+
+- **Laporan & Analitik**  
+  Menampilkan ringkasan omzet, omzet harian, dan produk terlaris serta ekspor laporan ke Excel/PDF.
+
+- **Riwayat Transaksi**  
+  Kasir dapat melihat riwayat transaksi miliknya sendiri, sedangkan pemilik dapat melihat seluruh riwayat.
+
+## Struktur Folder dan File
+
+```text
+LARIS-Project-PAW/
+├── .gitignore
+├── COMMIT_CONVENTION.md
+├── README.md
+├── backend/
+│   ├── docs/
+│   ├── scripts/
+│   ├── src/
+│   └── ...
+├── frontend/
+│   └── ...
+└── dokumen/
+    ├── API-Reference.md
+    ├── laporan-milestone-1-backend.md
+    ├── laporan-pengujian.md
+    ├── pembagian-tugas.md
+    └── PRD-LARIS-v2.md
+```
+
+## Teknologi yang Digunakan
 
 ### Frontend
-- **Framework:** React 18 dengan Vite
+
+- **Framework:** React 18 + Vite
 - **Styling:** Tailwind CSS
-- **Routing & State:** React Router v6, React Query, Axios
-- **Validasi Form:** React Hook Form & Zod
-- **Ikon & Komponen Tambahan:** Lucide React, react-hot-toast, Recharts
+- **Routing:** React Router v6
+- **Data Fetching & State:** React Query, Axios
+- **Validasi Form:** React Hook Form, Zod
+- **Komponen/UI:** Lucide React, react-hot-toast
+- **Visualisasi:** Recharts
 
 ### Backend
-- **Framework:** Node.js dengan Express.js
-- **Basis Data:** MongoDB (Atlas) dengan Mongoose ODM
-- **Keamanan:** bcryptjs, jsonwebtoken, helmet, cors, express-rate-limit
-- **Fitur Tambahan:** Midtrans SDK (QRIS), ExcelJS/PDFKit (Ekspor Data), node-cache
 
-## 📦 Prasyarat & Instalasi
+- **Runtime:** Node.js
+- **Framework:** Express.js
+- **Basis Data:** MongoDB Atlas
+- **ODM:** Mongoose
+- **Autentikasi:** JSON Web Token (JWT)
+- **Password Hashing:** bcryptjs
+- **Keamanan:** Helmet, CORS, express-rate-limit
+- **Pembayaran:** Midtrans SDK
+- **Ekspor Data:** ExcelJS, PDFKit
+- **Caching:** node-cache
 
-Pastikan sistem Anda telah memiliki [Node.js](https://nodejs.org/) (disarankan v18+) dan akses ke cluster [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
+## Prasyarat & Instalasi
 
-### Langkah-langkah Menjalankan Sistem Secara Lokal
+Pastikan perangkat telah memiliki:
 
-1. **Kloning Repositori**
-   ```bash
-   git clone https://github.com/ZaiskyDNA/LARIS-Project-PAW.git
-   cd LARIS-Project-PAW
-   ```
+- Node.js (disarankan v18+)
+- npm
+- Akses ke MongoDB Atlas
 
-2. **Jalankan Backend Server**
-   ```bash
-   cd backend
-   npm install
-   # Buat file .env berdasarkan .env.example dan lengkapi konfigurasi (MongoDB URI, JWT Secret, dll)
-   npm run seed   # data awal: owner@laris.com dan kasir@laris.com, kata sandi password123
-   npm run dev
-   ```
+### 1. Clone Repository
 
-3. **Jalankan Frontend App**
-   ```bash
-   cd frontend
-   npm install
-   # Buat file .env berdasarkan .env.example (API URL, Midtrans Client Key, dll)
-   npm run dev
-   ```
+```bash
+git clone https://github.com/ZaiskyDNA/LARIS-Project-PAW.git
+cd LARIS-Project-PAW
+```
+### 2. Menjalankan Backend
 
-4. Akses antarmuka aplikasi melalui browser di `http://localhost:5173`.
+```
+cd backend
+npm install
+npm run seed
+npm run dev
+```
 
-## 📖 Spesifikasi Lengkap (PRD)
+### 3. Menjalankan Frontend
+Buka terminal baru:
 
-Dokumentasi komprehensif mengenai kontrak API, skema basis data, user stories, arsitektur, hingga metrik evaluasi dapat dibaca pada berkas [PRD-LARIS-v2.md](./dokumen/PRD-LARIS-v2.md).
+```
+cd frontend
+npm install
+npm run dev
+```
+Aplikasi frontend dapat diakses melalui: http://localhost:5173
 
-## 📚 Dokumentasi Backend
+## Dokumentasi Proyek
 
+- [PRD LARIS v2](./dokumen/PRD-LARIS-v2.md)
 - [API Reference](./dokumen/API-Reference.md)
-- [Laporan Milestone 1 (backend)](./dokumen/laporan-milestone-1-backend.md)
+- [Laporan Milestone 1 (Backend)](./dokumen/laporan-milestone-1-backend.md)
 - [Laporan Pengujian](./dokumen/laporan-pengujian.md)
-- Koleksi Postman: `backend/docs/LARIS.postman_collection.json` (environment: `LARIS.postman_environment.json`)
-- Pembagian tugas: [pembagian-tugas.md](./dokumen/pembagian-tugas.md)
+- [Pembagian Tugas](./dokumen/pembagian-tugas.md)
+
+### Dokumentasi Postman
+
+- Collection: `backend/docs/LARIS.postman_collection.json`
+- Environment: `backend/docs/LARIS.postman_environment.json`
+
+## 📄 Laporan Milestone 1
+
+Laporan Milestone 1 dapat diakses melalui Google Drive berikut: [Google Drive - Laporan Milestone 1](https://drive.google.com/file/d/1-kUvRislSNcM7-iy5UjdnEZapDCsi2qd/view?usp=sharing)
