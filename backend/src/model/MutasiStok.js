@@ -32,6 +32,11 @@ const mutasiStokSchema = new mongoose.Schema(
       type: String,
       default: 'lain-lain',
     },
+    catatan: {
+      type: String,
+      trim: true,
+      maxlength: 200,
+    },
     refId: {
       type: mongoose.Schema.Types.ObjectId,
     },
