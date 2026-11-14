@@ -1,16 +1,54 @@
-# React + Vite
+# LARIS — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+Antarmuka web LARIS (kasir & manajemen stok) untuk pemilik dan kasir. Tampilan mengikuti desain Figma "PAW" (palet krem–jingga, tata letak desktop + HP).
 
-Currently, two official plugins are available:
+## Menjalankan
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm install
+cp .env.example .env   # VITE_API_URL, default http://localhost:5000/api
+npm run dev            # http://localhost:5173
+```
 
-## React Compiler
+Backend harus berjalan lebih dulu (lihat README di akar repositori). Akun contoh ada di data seed backend.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Perintah | Fungsi |
+|---|---|
+| `npm run dev` | Server pengembangan |
+| `npm run build` | Build produksi ke `dist/` |
+| `npm run lint` | Pemeriksaan kode (oxlint) |
 
-## Expanding the Oxlint configuration
+## Halaman & rute
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+| Rute | Halaman | Akses |
+|---|---|---|
+| `/masuk` | Login | Publik |
+| `/` | Dashboard | Pemilik (kasir dialihkan ke `/kasir`) |
+| `/produk`, `/produk?tab=menipis` | Produk & Stok, stok menipis, stok opname | Pemilik |
+| `/produk/tambah`, `/produk/:id/ubah` | Form produk | Pemilik |
+| `/produk/:id/mutasi` | Riwayat mutasi stok | Pemilik |
+| `/laporan` | Laporan + ekspor Excel/PDF | Pemilik |
+| `/pengguna` | Manajemen akun kasir | Pemilik |
+| `/pengaturan` | Pengaturan toko | Pemilik |
+| `/kasir` | Transaksi (tunai/QRIS), struk | Pemilik & Kasir |
+| `/transaksi` | Riwayat transaksi | Pemilik (semua) · Kasir (miliknya) |
+| `/profil` | Profil & keluar | Pemilik & Kasir |
+| `/akses-ditolak`, `*` | 403 dan 404 | Semua |
+
+## Struktur
+
+```
+src/
+├── halaman/      satu berkas per halaman
+├── komponen/     umum · tataletak · produk · kasir · laporan · pengguna
+├── hook/         logika & React Query (awalan `gunakan`)
+├── layanan/      pemanggilan API (Axios), satu berkas per modul
+├── konteks/      KonteksAuth — sesi pengguna & token
+├── rute/         RuteAplikasi, RuteTerproteksi (penjaga peran)
+├── skema/        validasi form (Zod)
+└── utilitas/     formatRupiah, formatTanggal, konstanta, galatApi
+```
+
+Aturan yang dipegang: halaman tidak memanggil Axios langsung (selalu lewat `layanan/` + `hook/`), daftar tetap ada di `utilitas/konstanta.js`, dan token warna didefinisikan sekali di `src/index.css` (`@theme`).
+
+Karena hook memakai awalan `gunakan` (bukan `use`), aturan lint `rules-of-hooks` dimatikan khusus untuk `src/hook/` di `.oxlintrc.json`.
