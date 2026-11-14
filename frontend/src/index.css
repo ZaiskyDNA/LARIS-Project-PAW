@@ -1,1 +1,103 @@
 @import "tailwindcss";
+
+/* Token desain — diambil dari frame "Color Pallete" pada berkas Figma PAW */
+@theme {
+  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  --color-jingga: #ff5e2c;
+  --color-jingga-tua: #e84e1e;
+  --color-merah: #b3261e;
+  --color-merah-muda: #ffd0cc;
+  --color-cokelat: #8a2a0b;
+  --color-hijau: #1b6b3a;
+  --color-hijau-muda: #d6f1e0;
+  --color-tinta: #2b2118;
+  --color-zaitun: #6b6048;
+  --color-khaki: #9a8f6b;
+  --color-pasir: #e6e1cf;
+  --color-krem: #fdfae9;
+  --color-latar: #fef7e2;
+  --color-kuning: #fff6c0;
+  --color-kuning-tua: #f3e7a4;
+  --color-persik: #ffe2b0;
+
+  --shadow-kolom: 0 3px 0 0 rgb(107 96 72 / 0.28), 0 4px 10px -2px rgb(107 96 72 / 0.18);
+  --shadow-kartu: 0 4px 0 0 rgb(107 96 72 / 0.22), 0 8px 18px -6px rgb(107 96 72 / 0.25);
+
+  --animate-muncul: muncul 0.18s ease-out;
+  --animate-naik: naik 0.22s ease-out;
+
+  @keyframes muncul {
+    from { opacity: 0; transform: scale(0.97); }
+    to { opacity: 1; transform: scale(1); }
+  }
+  @keyframes naik {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-latar font-sans text-tinta antialiased;
+    min-height: 100dvh;
+  }
+  button:not(:disabled),
+  [role="button"],
+  select,
+  summary {
+    cursor: pointer;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-cokelat);
+    outline-offset: 2px;
+  }
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+}
+
+@utility angka {
+  font-variant-numeric: tabular-nums;
+}
+
+@utility aman-bawah {
+  padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
+}
+
+/* Cetak struk: hanya elemen .area-cetak yang tampil */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  .area-cetak,
+  .area-cetak * {
+    visibility: visible !important;
+  }
+  .area-cetak {
+    position: fixed;
+    inset: 0 auto auto 0;
+    width: 80mm;
+    margin: 0;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
