@@ -67,7 +67,7 @@ const prosesPenguranganStokTransaksi = async (items, userId, refId) => {
   }
 };
 
-const prosesStokOpname = async (productId, stokFisik, alasan, userId) => {
+const prosesStokOpname = async (productId, stokFisik, alasan, userId, catatan) => {
   const produk = await Produk.findById(productId);
   if (!produk || !produk.isAktif) {
     const err = new Error('Produk tidak ditemukan');
@@ -97,6 +97,7 @@ const prosesStokOpname = async (productId, stokFisik, alasan, userId) => {
     stokSebelum,
     stokSesudah,
     alasan,
+    catatan: catatan || undefined,
     userId,
   });
 

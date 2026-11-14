@@ -58,7 +58,7 @@ Gagal:
 | PUT | /produk/:id | Pemilik | Ubah data produk |
 | DELETE | /produk/:id | Pemilik | Soft delete |
 | GET | /produk/stok-menipis | Pemilik | Produk dengan stok <= stok minimum, urut stok terkecil |
-| POST | /produk/:id/opname | Pemilik | Body: `stokFisik`, `alasan` (rusak, hilang, kedaluwarsa, salah input, stok masuk, lain-lain) |
+| POST | /produk/:id/opname | Pemilik | Body: `stokFisik`, `alasan` (rusak, hilang, kedaluwarsa, salah input, stok masuk, lain-lain), `catatan` (opsional, maks 200 karakter) |
 | GET | /produk/:id/mutasi | Pemilik | Riwayat mutasi stok |
 
 ## Transaksi
@@ -85,7 +85,7 @@ Gagal:
 | Method | Endpoint | Akses | Keterangan |
 |---|---|---|---|
 | GET | /pengaturan | Login | Baca pengaturan toko |
-| PUT | /pengaturan | Pemilik | Body: `namaToko`, `alamat`, `stokMinimumDefault`, `mataUang` |
+| PUT | /pengaturan | Pemilik | Body: `namaToko`, `alamat`, `telepon`, `stokMinimumDefault`, `mataUang` |
 
 ## Aturan validasi
 

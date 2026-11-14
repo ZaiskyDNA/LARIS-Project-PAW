@@ -290,7 +290,7 @@ const hapusProduk = async (req, res, next) => {
 const stokOpname = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { stokFisik, alasan } = req.body;
+    const { stokFisik, alasan, catatan } = req.body;
 
     if (!adalahIdValid(id)) {
       return gagal(res, 404, 'Produk tidak ditemukan', 'TIDAK_DITEMUKAN');
@@ -303,11 +303,14 @@ const stokOpname = async (req, res, next) => {
     if (!ALASAN_OPNAME.includes(alasan)) {
       galat.push({ field: 'alasan', pesan: `Alasan wajib salah satu dari: ${ALASAN_OPNAME.join(', ')}` });
     }
+    if (catatan !== undefined && catatan !== null && (typeof catatan !== 'string' || catatan.length > 200)) {
+      galat.push({ field: 'catatan', pesan: 'Catatan maksimal 200 karakter' });
+    }
     if (galat.length > 0) {
       return gagal(res, 400, 'Validasi gagal', 'VALIDASI_GAGAL', galat);
     }
 
-    const { produk, mutasi } = await prosesStokOpname(id, stokFisik, alasan, req.user._id);
+    const { produk, mutasi } = await prosesStokOpname(id, stokFisik, alasan, req.user._id, catatan);
 
     return sukses(res, 200, 'Stok opname berhasil disimpan', {
       produk,
