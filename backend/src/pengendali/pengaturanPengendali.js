@@ -15,7 +15,7 @@ const bacaPengaturan = async (req, res, next) => {
 
 const ubahPengaturan = async (req, res, next) => {
   try {
-    const { namaToko, alamat, stokMinimumDefault, mataUang } = req.body;
+    const { namaToko, alamat, telepon, stokMinimumDefault, mataUang } = req.body;
 
     const galat = [];
     if (namaToko !== undefined && (typeof namaToko !== 'string' || namaToko.trim().length < 2 || namaToko.length > 100)) {
@@ -23,6 +23,9 @@ const ubahPengaturan = async (req, res, next) => {
     }
     if (alamat !== undefined && (typeof alamat !== 'string' || alamat.length > 200)) {
       galat.push({ field: 'alamat', pesan: 'Alamat maksimal 200 karakter' });
+    }
+    if (telepon !== undefined && (typeof telepon !== 'string' || !/^[0-9+\-\s()]{0,20}$/.test(telepon))) {
+      galat.push({ field: 'telepon', pesan: 'Nomor telepon tidak valid' });
     }
     if (
       stokMinimumDefault !== undefined &&
@@ -41,6 +44,7 @@ const ubahPengaturan = async (req, res, next) => {
 
     if (namaToko !== undefined) pengaturan.namaToko = namaToko;
     if (alamat !== undefined) pengaturan.alamat = alamat;
+    if (telepon !== undefined) pengaturan.telepon = telepon.trim();
     if (stokMinimumDefault !== undefined) pengaturan.stokMinimumDefault = stokMinimumDefault;
     if (mataUang !== undefined) pengaturan.mataUang = mataUang;
 

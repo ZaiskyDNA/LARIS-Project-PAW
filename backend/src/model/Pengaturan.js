@@ -10,6 +10,11 @@ const pengaturanSchema = new mongoose.Schema(
       type: String,
       default: 'Jl. Contoh No. 123, Yogyakarta',
     },
+    telepon: {
+      type: String,
+      default: '',
+      trim: true,
+    },
     stokMinimumDefault: {
       type: Number,
       default: 5,
