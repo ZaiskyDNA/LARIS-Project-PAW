@@ -20,7 +20,7 @@ const kurangiStokAtomik = async (items) => {
     const produk = await Produk.findOneAndUpdate(
       { _id: item.productId, isAktif: true, stok: { $gte: item.qty } },
       { $inc: { stok: -item.qty } },
-      { new: true }
+      { returnDocument: 'after' }
     );
 
     if (!produk) {

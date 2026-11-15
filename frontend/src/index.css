@@ -74,25 +74,6 @@
   padding-bottom: max(env(safe-area-inset-bottom), 0.5rem);
 }
 
-/* Cetak struk: hanya elemen .area-cetak yang tampil */
-@media print {
-  body * {
-    visibility: hidden !important;
-  }
-  .area-cetak,
-  .area-cetak * {
-    visibility: visible !important;
-  }
-  .area-cetak {
-    position: fixed;
-    inset: 0 auto auto 0;
-    width: 80mm;
-    margin: 0;
-    border: 0 !important;
-    box-shadow: none !important;
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
