@@ -95,7 +95,11 @@ export function cetakStruk() {
   dokumen.getElementById('area-print').appendChild(salinanStruk)
 
   // Tunggu stylesheet dan font selesai dimuat sebelum mencetak.
+  let sudahMencetak = false
   const cetak = async () => {
+    if (sudahMencetak) return
+    sudahMencetak = true
+
     try {
       if (dokumen.fonts?.ready) {
         await dokumen.fonts.ready
