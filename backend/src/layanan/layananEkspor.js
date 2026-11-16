@@ -4,12 +4,19 @@ const Transaksi = require('../model/Transaksi');
 const { getRentangTanggalUTC, tanggalHariIni } = require('../utilitas/zonaWaktu');
 const { getOmzetHarian, getProdukTerlaris } = require('./layananLaporan');
 
-const eksporExcel = async (tanggalMulaiStr, tanggalAkhirStr, res) => {
+const ambilTransaksiBerhasil = (tanggalMulaiStr, tanggalAkhirStr) => {
   const { mulai, akhir } = getRentangTanggalUTC(tanggalMulaiStr, tanggalAkhirStr);
-  const transaksiList = await Transaksi.find({
+  return Transaksi.find({
     createdAt: { $gte: mulai, $lte: akhir },
     statusBayar: 'berhasil',
   }).sort({ createdAt: -1 });
+};
+
+const formatWaktu = (tanggal) =>
+  tanggal.toLocaleString('id-ID', { timeZone: 'Asia/Jakarta', dateStyle: 'short', timeStyle: 'short' });
+
+const eksporExcel = async (tanggalMulaiStr, tanggalAkhirStr, res) => {
+  const transaksiList = await ambilTransaksiBerhasil(tanggalMulaiStr, tanggalAkhirStr);
 
   const omzetHarian = await getOmzetHarian(tanggalMulaiStr, tanggalAkhirStr);
   const produkTerlaris = await getProdukTerlaris(10, tanggalMulaiStr, tanggalAkhirStr);
@@ -75,6 +82,7 @@ const eksporExcel = async (tanggalMulaiStr, tanggalAkhirStr, res) => {
 };
 
 const eksporPdf = async (tanggalMulaiStr, tanggalAkhirStr, res) => {
+  const transaksiList = await ambilTransaksiBerhasil(tanggalMulaiStr, tanggalAkhirStr);
   const omzetHarian = await getOmzetHarian(tanggalMulaiStr, tanggalAkhirStr);
   const produkTerlaris = await getProdukTerlaris(10, tanggalMulaiStr, tanggalAkhirStr);
 
@@ -111,6 +119,18 @@ const eksporPdf = async (tanggalMulaiStr, tanggalAkhirStr, res) => {
 
   produkTerlaris.forEach((p, idx) => {
     doc.fontSize(10).text(`${idx + 1}. ${p.namaProduk} - Terjual: ${p.totalTerjual} - Total: Rp ${p.totalOmzet.toLocaleString('id-ID')}`);
+  });
+
+  // US-12 kriteria 2: berkas memuat daftar transaksi
+  doc.moveDown();
+  doc.fontSize(14).text(`Daftar Transaksi (${transaksiList.length})`, { underline: true });
+  doc.moveDown(0.5);
+  transaksiList.forEach((t) => {
+    doc
+      .fontSize(9)
+      .text(
+        `${t.nomorTransaksi}  |  ${formatWaktu(t.createdAt)}  |  ${t.namaKasir}  |  ${t.metodeBayar.toUpperCase()}  |  Rp ${t.total.toLocaleString('id-ID')}`
+      );
   });
 
   doc.end();

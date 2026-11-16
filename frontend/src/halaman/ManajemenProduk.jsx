@@ -68,7 +68,7 @@ export default function ManajemenProduk() {
       {tab === TAB.SEMUA ? (
         <>
           <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center">
-            <KolomCari nilai={cari} saatUbah={setCari} placeholder="Cari nama produk…" label="Cari produk" className="md:w-96" />
+            <KolomCari nilai={cari} saatUbah={setCari} placeholder="Cari nama atau scan barcode…" label="Cari produk" className="md:w-96" />
             <KolomPilih aria-label="Filter kategori" value={kategori} onChange={(e) => ubahParam({ kategori: e.target.value, halaman: '' })} className="md:w-52 [&_select]:min-h-12 [&_select]:rounded-full [&_select]:font-bold [&_select]:shadow-none">
               <option value="">Semua kategori</option>
               {kategoriTerpakai.map((nama) => (

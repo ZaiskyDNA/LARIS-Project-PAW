@@ -33,4 +33,3 @@ export const gunakanBuatTransaksi = () => {
   return useMutation({ mutationFn: apiTransaksi.buatTransaksi, onSettled: segarkan })
 }
 
-export const gunakanSesiQris = () => useMutation({ mutationFn: apiTransaksi.buatSesiQris })

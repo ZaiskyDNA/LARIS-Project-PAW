@@ -51,7 +51,7 @@ Gagal:
 
 | Method | Endpoint | Akses | Keterangan |
 |---|---|---|---|
-| GET | /produk | Login | Query: `cari`, `kategori`, `statusStok`, `halaman`, `perHalaman` |
+| GET | /produk | Login | Query: `cari` (nama atau barcode persis), `kategori`, `statusStok`, `halaman`, `perHalaman` |
 | GET | /produk/:id | Login | Detail produk |
 | GET | /produk/barcode/:kode | Login | Cari lewat barcode |
 | POST | /produk | Pemilik | Body: `nama`, `kategori`, `harga`, `stok`, `stokMinimum`, `satuan`, `barcode` |
@@ -68,7 +68,10 @@ Gagal:
 | POST | /transaksi | Login | Body: `items` (`productId`, `qty`), `metodeBayar` (tunai/qris), `nominalBayar` |
 | GET | /transaksi | Login | Query: `tanggalMulai`, `tanggalAkhir`, `halaman`, `perHalaman`. Kasir hanya melihat miliknya |
 | GET | /transaksi/:id | Login | Kasir hanya bisa membuka miliknya |
-| POST | /transaksi/:id/bayar-qris | Login | Membuat sesi pembayaran QRIS |
+| POST | /transaksi/:id/bayar-qris | Login | Membuat kode QRIS (Midtrans Core API). Respons: `qrString`, `qrUrl`, `kedaluwarsaPada`, `simulasi` |
+| POST | /transaksi/:id/cek-status | Login | Menanyakan status ke Midtrans lalu memperbarui transaksi; menandai `kedaluwarsa` bila lewat 5 menit |
+| POST | /transaksi/:id/batalkan | Login | Membatalkan transaksi QRIS yang masih `menunggu` |
+| POST | /transaksi/:id/simulasi-bayar | Login | Hanya mode simulasi (tanpa kunci Midtrans): menandai QRIS `berhasil` dan memotong stok. Ditolak 403 bila Midtrans aktif |
 | POST | /transaksi/webhook-midtrans | Publik | Notifikasi Midtrans, tanda tangan diperiksa |
 
 ## Laporan (pemilik)
@@ -99,6 +102,8 @@ Gagal:
 ## Catatan
 
 - Transaksi tunai mengurangi stok dengan `findOneAndUpdate({ stok: { $gte: qty } })`. Jika ada item yang gagal, item yang sudah dikurangi dikembalikan, jadi tidak ada transaksi yang tersimpan sebagian.
-- Transaksi QRIS berstatus `menunggu` dan stok baru berkurang setelah webhook `settlement`.
+- Transaksi QRIS berstatus `menunggu` dan stok baru berkurang setelah status `settlement` (lewat webhook atau `cek-status`). Status akhir: `berhasil`, `gagal`, `dibatalkan`, `kedaluwarsa`.
+- Tanpa `MIDTRANS_SERVER_KEY`, `bayar-qris` membuat kode simulasi (`simulasi: true`) agar pembayaran tunai tetap berjalan.
+- `GET /api/kesehatan` dipakai health check load balancer/App Runner.
 - Cache laporan 60 detik dan dihapus saat ada transaksi, opname, atau perubahan produk.
 - Respons login memakai `data.user._id`, berbeda dari contoh PRD (`data.pengguna.id`).

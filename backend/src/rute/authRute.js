@@ -6,7 +6,7 @@ const autentikasi = require('../middleware/autentikasi');
 
 const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: parseInt(process.env.LOGIN_RATE_LIMIT, 10) || 20,
+  max: parseInt(process.env.LOGIN_RATE_LIMIT, 10) || 100,
   message: {
     sukses: false,
     pesan: 'Terlalu banyak percobaan login, silakan coba lagi nanti',

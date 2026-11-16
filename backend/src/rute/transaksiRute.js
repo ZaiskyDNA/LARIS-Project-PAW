@@ -5,6 +5,9 @@ const {
   daftarTransaksi,
   detailTransaksi,
   bayarQris,
+  cekStatusQris,
+  batalkanTransaksiQris,
+  simulasiBayarQris,
   webhookMidtrans,
 } = require('../pengendali/transaksiPengendali');
 const autentikasi = require('../middleware/autentikasi');
@@ -17,5 +20,8 @@ router.post('/', buatTransaksi);
 router.get('/', daftarTransaksi);
 router.get('/:id', detailTransaksi);
 router.post('/:id/bayar-qris', bayarQris);
+router.post('/:id/cek-status', cekStatusQris);
+router.post('/:id/batalkan', batalkanTransaksiQris);
+router.post('/:id/simulasi-bayar', simulasiBayarQris);
 
 module.exports = router;

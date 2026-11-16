@@ -65,7 +65,7 @@ const transaksiSchema = new mongoose.Schema(
     },
     statusBayar: {
       type: String,
-      enum: ['berhasil', 'menunggu', 'gagal', 'dibatalkan'],
+      enum: ['berhasil', 'menunggu', 'gagal', 'dibatalkan', 'kedaluwarsa'],
       default: 'berhasil',
     },
     nominalBayar: {

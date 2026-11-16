@@ -50,6 +50,7 @@ export const STATUS_BAYAR = {
   menunggu: { label: 'Menunggu', kelas: 'bg-persik text-cokelat' },
   gagal: { label: 'Gagal', kelas: 'bg-merah-muda text-merah' },
   dibatalkan: { label: 'Dibatalkan', kelas: 'bg-pasir text-zaitun' },
+  kedaluwarsa: { label: 'Kedaluwarsa', kelas: 'bg-pasir text-zaitun' },
 }
 
 export const PECAHAN_UANG = [10_000, 20_000, 50_000, 100_000]

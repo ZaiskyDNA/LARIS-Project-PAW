@@ -7,7 +7,8 @@
     "dev": "nodemon server.js",
     "seed": "node src/seed/dataAwal.js",
     "uji:integritas": "node scripts/ujiIntegritas.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "bundle:lambda": "bash scripts/buatZipLambda.sh"
   },
   "keywords": [],
   "author": "",
@@ -25,7 +26,8 @@
     "midtrans-client": "^1.4.3",
     "mongoose": "^9.10.1",
     "node-cache": "^5.1.2",
-    "pdfkit": "^0.20.2"
+    "pdfkit": "^0.20.2",
+    "serverless-http": "^3.2.0"
   },
   "devDependencies": {
     "nodemon": "^3.1.14"

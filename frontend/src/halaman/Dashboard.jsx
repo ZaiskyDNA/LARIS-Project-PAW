@@ -59,7 +59,7 @@ function KartuStokMenipis() {
 export default function Dashboard() {
   const { pengguna } = gunakanAuth()
   const hariIni = hariIniIso()
-  const rentangMinggu = { tanggalMulai: geserHari(hariIni, -6), tanggalAkhir: hariIni, limit: 7 }
+  const rentangMinggu = { tanggalMulai: geserHari(hariIni, -6), tanggalAkhir: hariIni, limit: 10 }
 
   const ringkasan = gunakanRingkasan()
   const tren = gunakanTrenMingguan()
@@ -115,7 +115,7 @@ export default function Dashboard() {
         </div>
       </section>
 
-      <div className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_20rem] xl:items-start">
+      <div className="mt-6 grid grid-cols-1 gap-6 2xl:grid-cols-[minmax(0,1fr)_20rem] 2xl:items-start">
         <section className="rounded-3xl bg-kuning p-4 shadow-kartu lg:p-5" aria-labelledby="judul-terlaris">
           <h2 id="judul-terlaris" className="mb-4 inline-flex min-h-8 items-center rounded-full bg-krem px-4 text-sm font-bold text-tinta shadow-kolom">
             Produk Terlaris · 7 hari

@@ -111,9 +111,21 @@ cd LARIS-Project-PAW
 ```
 cd backend
 npm install
-npm run seed
+cp .env.example .env   # isi minimal JWT_SECRET (openssl rand -hex 32)
+npm run seed           # PERINGATAN: menghapus seluruh data lalu mengisi data demo
 npm run dev
 ```
+
+Seed membuat data demo 30 hari terakhir: 35 produk (1 di antaranya sudah dihapus), ±850 transaksi tunai & QRIS, riwayat stok masuk dan stok opname, serta beberapa produk menipis/habis. Jalankan ulang seed sebelum demo agar transaksi "hari ini" ikut terisi.
+
+#### Akun demo (kata sandi `password123`)
+
+| Email | Peran | Keterangan |
+|---|---|---|
+| owner@laris.com | Pemilik | Pak Hasan |
+| kasir@laris.com | Kasir | Rani Putri |
+| dimas@laris.com | Kasir | Dimas Pratama |
+| sari@laris.com | Kasir | Sari Wulan — **nonaktif**, tidak bisa login |
 
 ### 3. Menjalankan Frontend
 Buka terminal baru:
@@ -121,6 +133,7 @@ Buka terminal baru:
 ```
 cd frontend
 npm install
+cp .env.example .env   # VITE_API_URL=http://localhost:5000/api
 npm run dev
 ```
 Aplikasi frontend dapat diakses melalui: http://localhost:5173
@@ -132,6 +145,7 @@ Aplikasi frontend dapat diakses melalui: http://localhost:5173
 - [Laporan Milestone 1 (Backend)](./dokumen/laporan-milestone-1-backend.md)
 - [Laporan Pengujian](./dokumen/laporan-pengujian.md)
 - [Pembagian Tugas](./dokumen/pembagian-tugas.md)
+- [Panduan Deploy AWS](./dokumen/panduan-deploy-aws.md)
 
 ### Dokumentasi Postman
 

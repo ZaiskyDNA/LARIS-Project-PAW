@@ -3945,7 +3945,7 @@
                   "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
                   "",
                   "const d = pm.response.json().data;",
-                  "pm.test(\"Ada token sesi & order id\", () => { pm.expect(d.token).to.be.a(\"string\"); pm.expect(d.midtransOrderId).to.include(\"TRX-\"); });",
+                  "pm.test(\"Kode QR simulasi & order id\", () => { pm.expect(d.qrString).to.be.a(\"string\"); pm.expect(d.simulasi).to.eql(true); pm.expect(d.midtransOrderId).to.include(\"TRX-\"); });",
                   "pm.collectionVariables.set(\"qrisOrderId\", d.midtransOrderId);"
                 ]
               }
@@ -4051,29 +4051,15 @@
           }
         },
         {
-          "name": "[QRIS] Webhook settlement (tanda tangan valid) -> berhasil",
+          "name": "[QRIS] Simulasi pembayaran berhasil (mode tanpa Midtrans)",
           "event": [
-            {
-              "listen": "prerequest",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.collectionVariables.set(\"qrisTotal\", pm.collectionVariables.get(\"trxQrisTotal\"));",
-                  "const orderId = pm.collectionVariables.get(\"qrisOrderId\");",
-                  "const gross = Number(pm.collectionVariables.get(\"qrisTotal\")).toFixed(2);",
-                  "const key = pm.variables.get(\"midtransServerKey\");",
-                  "pm.collectionVariables.set(\"qrisGross\", gross);",
-                  "pm.collectionVariables.set(\"qrisSignature\", CryptoJS.SHA512(orderId + \"200\" + gross + key).toString());"
-                ]
-              }
-            },
             {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
-                  "pm.test(\"sukses = true\", () => pm.expect(pm.response.json().sukses).to.eql(true));"
+                  "pm.test(\"statusBayar berhasil\", () => pm.expect(pm.response.json().data.statusBayar).to.eql(\"berhasil\"));"
                 ]
               }
             }
@@ -4082,28 +4068,20 @@
             "method": "POST",
             "header": [
               {
-                "key": "Content-Type",
-                "value": "application/json"
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/transaksi/webhook-midtrans",
+              "raw": "{{baseUrl}}/transaksi/{{trxQrisId}}/simulasi-bayar",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "transaksi",
-                "webhook-midtrans"
+                "{{trxQrisId}}",
+                "simulasi-bayar"
               ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"order_id\": \"{{qrisOrderId}}\",\n  \"transaction_status\": \"settlement\",\n  \"status_code\": \"200\",\n  \"gross_amount\": \"{{qrisGross}}\",\n  \"signature_key\": \"{{qrisSignature}}\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
             }
           }
         },
@@ -4176,27 +4154,15 @@
           }
         },
         {
-          "name": "[QRIS] Webhook diulang tidak mengurangi stok dua kali",
+          "name": "[QRIS] Simulasi bayar diulang -> 400 (stok tidak terpotong dua kali)",
           "event": [
-            {
-              "listen": "prerequest",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "const orderId = pm.collectionVariables.get(\"qrisOrderId\");",
-                  "const gross = Number(pm.collectionVariables.get(\"qrisTotal\")).toFixed(2);",
-                  "const key = pm.variables.get(\"midtransServerKey\");",
-                  "pm.collectionVariables.set(\"qrisGross\", gross);",
-                  "pm.collectionVariables.set(\"qrisSignature\", CryptoJS.SHA512(orderId + \"200\" + gross + key).toString());"
-                ]
-              }
-            },
             {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"kodeGalat VALIDASI_GAGAL\", () => pm.expect(pm.response.json().kodeGalat).to.eql(\"VALIDASI_GAGAL\"));"
                 ]
               }
             }
@@ -4205,28 +4171,20 @@
             "method": "POST",
             "header": [
               {
-                "key": "Content-Type",
-                "value": "application/json"
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/transaksi/webhook-midtrans",
+              "raw": "{{baseUrl}}/transaksi/{{trxQrisId}}/simulasi-bayar",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "transaksi",
-                "webhook-midtrans"
+                "{{trxQrisId}}",
+                "simulasi-bayar"
               ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"order_id\": \"{{qrisOrderId}}\",\n  \"transaction_status\": \"settlement\",\n  \"status_code\": \"200\",\n  \"gross_amount\": \"{{qrisGross}}\",\n  \"signature_key\": \"{{qrisSignature}}\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
             }
           }
         },
@@ -4266,7 +4224,7 @@
           }
         },
         {
-          "name": "[QRIS] Transaksi QRIS kedua (akan kedaluwarsa)",
+          "name": "[QRIS] Transaksi QRIS kedua (akan dibatalkan)",
           "event": [
             {
               "listen": "test",
@@ -4320,7 +4278,7 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
-                  "pm.collectionVariables.set(\"qrisOrderId\", pm.response.json().data.midtransOrderId);"
+                  "pm.test(\"Ada kode QR\", () => pm.expect(pm.response.json().data.qrString).to.be.a(\"string\"));"
                 ]
               }
             }
@@ -4347,28 +4305,15 @@
           }
         },
         {
-          "name": "[QRIS] Webhook expire -> dibatalkan, stok tidak berubah",
+          "name": "[QRIS] Cek status: masih menunggu",
           "event": [
-            {
-              "listen": "prerequest",
-              "script": {
-                "type": "text/javascript",
-                "exec": [
-                  "pm.collectionVariables.set(\"qrisTotal\", pm.collectionVariables.get(\"trxQris2Total\"));",
-                  "const orderId = pm.collectionVariables.get(\"qrisOrderId\");",
-                  "const gross = Number(pm.collectionVariables.get(\"qrisTotal\")).toFixed(2);",
-                  "const key = pm.variables.get(\"midtransServerKey\");",
-                  "pm.collectionVariables.set(\"qrisGross\", gross);",
-                  "pm.collectionVariables.set(\"qrisSignature\", CryptoJS.SHA512(orderId + \"200\" + gross + key).toString());"
-                ]
-              }
-            },
             {
               "listen": "test",
               "script": {
                 "type": "text/javascript",
                 "exec": [
-                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));"
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"statusBayar menunggu\", () => pm.expect(pm.response.json().data.statusBayar).to.eql(\"menunggu\"));"
                 ]
               }
             }
@@ -4377,28 +4322,89 @@
             "method": "POST",
             "header": [
               {
-                "key": "Content-Type",
-                "value": "application/json"
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
               }
             ],
             "url": {
-              "raw": "{{baseUrl}}/transaksi/webhook-midtrans",
+              "raw": "{{baseUrl}}/transaksi/{{trxQris2Id}}/cek-status",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "transaksi",
-                "webhook-midtrans"
+                "{{trxQris2Id}}",
+                "cek-status"
               ]
-            },
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"order_id\": \"{{qrisOrderId}}\",\n  \"transaction_status\": \"expire\",\n  \"status_code\": \"200\",\n  \"gross_amount\": \"{{qrisGross}}\",\n  \"signature_key\": \"{{qrisSignature}}\"\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
+            }
+          }
+        },
+        {
+          "name": "[QRIS] Batalkan QRIS kedua -> dibatalkan, stok tidak berubah",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"statusBayar dibatalkan\", () => pm.expect(pm.response.json().data.statusBayar).to.eql(\"dibatalkan\"));"
+                ]
               }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi/{{trxQris2Id}}/batalkan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi",
+                "{{trxQris2Id}}",
+                "batalkan"
+              ]
+            }
+          }
+        },
+        {
+          "name": "[QRIS] Batalkan lagi -> 400",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Status 400\", () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokenKasir}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/transaksi/{{trxQris2Id}}/batalkan",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "transaksi",
+                "{{trxQris2Id}}",
+                "batalkan"
+              ]
             }
           }
         },
