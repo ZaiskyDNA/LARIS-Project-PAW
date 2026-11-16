@@ -20,7 +20,8 @@ const daftarProduk = async (req, res, next) => {
     const query = { isAktif: true };
 
     if (cari) {
-      query.nama = { $regex: escapeRegex(cari), $options: 'i' };
+      const kataKunci = String(cari).trim();
+      query.$or = [{ nama: { $regex: escapeRegex(kataKunci), $options: 'i' } }, { barcode: kataKunci }];
     }
 
     if (kategori) {
