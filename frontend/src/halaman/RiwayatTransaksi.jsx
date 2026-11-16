@@ -13,6 +13,7 @@ import { gunakanDaftarTransaksi } from '../hook/gunakanTransaksi.js'
 import { formatRupiah } from '../utilitas/formatRupiah.js'
 import { formatJam, formatTanggalJamPendek, hariIniIso } from '../utilitas/formatTanggal.js'
 import { METODE_BAYAR, PER_HALAMAN, STATUS_BAYAR } from '../utilitas/konstanta.js'
+import { cetakStruk } from '../utilitas/cetakStruk.js'
 
 const jumlahItem = (transaksi) => transaksi.items.reduce((jumlah, item) => jumlah + item.qty, 0)
 
@@ -29,7 +30,7 @@ function ModalDetail({ transaksi, saatTutup }) {
             <LencanaStatus status={transaksi.statusBayar} />
           </div>
           <Struk transaksi={transaksi} />
-          <Tombol ukuran="besar" penuh onClick={() => window.print()} className="rounded-xl print:hidden">
+          <Tombol ukuran="besar" penuh onClick={cetakStruk} className="rounded-xl print:hidden">
             Cetak Ulang Struk
           </Tombol>
         </div>

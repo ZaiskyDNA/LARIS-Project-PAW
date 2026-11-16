@@ -17,6 +17,7 @@ import { ambilProdukBarcode } from '../layanan/apiProduk.js'
 import { formatRupiah } from '../utilitas/formatRupiah.js'
 import { PER_HALAMAN_KASIR, POLA_BARCODE } from '../utilitas/konstanta.js'
 import { pesanGalat } from '../utilitas/galatApi.js'
+import { cetakStruk } from '../utilitas/cetakStruk.js'
 
 function LayarBerhasil({ transaksi, saatBaru }) {
   return (
@@ -27,7 +28,7 @@ function LayarBerhasil({ transaksi, saatBaru }) {
       <h1 className="mb-6 mt-3 text-3xl font-extrabold tracking-tight text-tinta print:hidden">Transaksi Berhasil</h1>
       <Struk transaksi={transaksi} />
       <div className="mt-6 grid w-full grid-cols-2 gap-4 print:hidden">
-        <Tombol varian="sekunder" ukuran="besar" onClick={() => window.print()} className="rounded-xl">
+        <Tombol varian="sekunder" ukuran="besar" onClick={cetakStruk} className="rounded-xl">
           Cetak Struk
         </Tombol>
         <Tombol ukuran="besar" onClick={saatBaru} autoFocus className="rounded-xl">
