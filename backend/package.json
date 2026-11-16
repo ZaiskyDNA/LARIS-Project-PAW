@@ -7,7 +7,8 @@
     "dev": "nodemon server.js",
     "seed": "node src/seed/dataAwal.js",
     "uji:integritas": "node scripts/ujiIntegritas.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "bundle:lambda": "bash scripts/buatZipLambda.sh"
   },
   "keywords": [],
   "author": "",
