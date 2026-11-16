@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Modal from '../umum/Modal.jsx'
 import PanelTunai from './PanelTunai.jsx'
 import PanelQris from './PanelQris.jsx'
@@ -20,6 +20,12 @@ function IsiPembayaran({ items, total, saatBerhasil, saatKunci }) {
   const transaksiTunai = gunakanBuatTransaksi()
   const qris = gunakanPembayaranQris({ items, saatBerhasil })
   const terkunci = transaksiTunai.isPending || qris.sedangMembuat || Boolean(qris.sesi)
+  const qrisMenunggu = Boolean(qris.sesi) && qris.status === 'menunggu'
+
+  // Selama QR aktif, dialog hanya bisa ditutup lewat "Batalkan" agar transaksi tidak menggantung
+  useEffect(() => {
+    saatKunci(qrisMenunggu)
+  }, [qrisMenunggu, saatKunci])
 
   const bayarTunai = (nominalBayar) => {
     setGalatTunai(null)
@@ -65,7 +71,7 @@ function IsiPembayaran({ items, total, saatBerhasil, saatKunci }) {
       {metode === 'tunai' ? (
         <PanelTunai total={total} memuat={transaksiTunai.isPending} galat={galatTunai} saatSelesai={bayarTunai} />
       ) : (
-        <PanelQris total={total} qris={qris} saatBatalkan={qris.batalkan} />
+        <PanelQris total={total} qris={qris} />
       )}
     </div>
   )

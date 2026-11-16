@@ -1,4 +1,3 @@
-const crypto = require('crypto');
 const mongoose = require('mongoose');
 const Transaksi = require('../model/Transaksi');
 const MutasiStok = require('../model/MutasiStok');
@@ -8,11 +7,19 @@ const {
   pulihkanStok,
 } = require('../layanan/layananStok');
 const { buatNomorTransaksi } = require('../utilitas/nomorTransaksi');
-const { snap } = require('../konfigurasi/midtrans');
+const {
+  PETA_STATUS,
+  terapkanStatus,
+  buatSesiQris,
+  sinkronkanStatus,
+  batalkanQris,
+  simulasikanBayar,
+  tandaTanganValid,
+} = require('../layanan/layananPembayaran');
+const { normalisasiItems } = require('../validator/transaksiValidator');
 const { sukses, gagal } = require('../utilitas/formatResponsApi');
 const { getRentangTanggalUTC, validasiRentangTanggal } = require('../utilitas/zonaWaktu');
 const { adalahIdValid, parsePaginasi } = require('../utilitas/validasi');
-const { normalisasiItems } = require('../validator/transaksiValidator');
 
 const buatTransaksi = async (req, res, next) => {
   try {
@@ -177,64 +184,74 @@ const detailTransaksi = async (req, res, next) => {
   }
 };
 
+// Memuat transaksi dan memastikan kasir hanya menyentuh transaksinya sendiri (BR-10)
+const ambilTransaksiMilik = async (req, res) => {
+  const { id } = req.params;
+  const transaksi = adalahIdValid(id) ? await Transaksi.findById(id) : null;
+  if (!transaksi) {
+    gagal(res, 404, 'Transaksi tidak ditemukan', 'TIDAK_DITEMUKAN');
+    return null;
+  }
+  if (req.user.role === 'kasir' && transaksi.kasirId.toString() !== req.user._id.toString()) {
+    gagal(res, 403, 'Akses ditolak: transaksi ini milik kasir lain', 'AKSES_DITOLAK');
+    return null;
+  }
+  return transaksi;
+};
+
+const tanganiGalatBisnis = (error, res, next) =>
+  error.statusCode ? gagal(res, error.statusCode, error.message, error.kodeGalat) : next(error);
+
 const bayarQris = async (req, res, next) => {
   try {
-    const { id } = req.params;
-    if (!adalahIdValid(id)) {
-      return gagal(res, 404, 'Transaksi tidak ditemukan', 'TIDAK_DITEMUKAN');
-    }
-
-    const transaksi = await Transaksi.findById(id);
-
-    if (!transaksi) {
-      return gagal(res, 404, 'Transaksi tidak ditemukan', 'TIDAK_DITEMUKAN');
-    }
-
-    if (req.user.role === 'kasir' && transaksi.kasirId.toString() !== req.user._id.toString()) {
-      return gagal(res, 403, 'Akses ditolak: transaksi ini milik kasir lain', 'AKSES_DITOLAK');
-    }
+    const transaksi = await ambilTransaksiMilik(req, res);
+    if (!transaksi) return;
 
     if (transaksi.metodeBayar !== 'qris' || transaksi.statusBayar !== 'menunggu') {
       return gagal(res, 400, 'Transaksi ini tidak menunggu pembayaran QRIS', 'VALIDASI_GAGAL');
     }
 
-    const parameter = {
-      transaction_details: {
-        order_id: `${transaksi.nomorTransaksi}-${Date.now()}`,
-        gross_amount: transaksi.total,
-      },
-      customer_details: {
-        first_name: req.user.nama,
-      },
-      enabled_payments: ['gopay', 'qris'],
-    };
-
-    let sesi;
-    let pesan = 'Berhasil membuat sesi QRIS';
-    try {
-      sesi = await snap.createTransaction(parameter);
-    } catch (e) {
-      sesi = { token: 'mock_snap_token_sandbox', redirect_url: null, mock: true };
-      pesan = 'Gateway Midtrans tidak tersedia, sesi QRIS tiruan dibuat (sandbox)';
-    }
-
-    transaksi.midtransOrderId = parameter.transaction_details.order_id;
-    await transaksi.save();
-
-    return sukses(res, 200, pesan, { ...sesi, midtransOrderId: transaksi.midtransOrderId });
+    const sesi = await buatSesiQris(transaksi, req.user.nama);
+    const pesan = sesi.simulasi
+      ? 'Gateway Midtrans belum dikonfigurasi, kode QR simulasi dibuat'
+      : 'Berhasil membuat kode QRIS';
+    return sukses(res, 200, pesan, sesi);
   } catch (error) {
-    next(error);
+    tanganiGalatBisnis(error, res, next);
   }
 };
 
-const tandaTanganValid = ({ order_id, status_code, gross_amount, signature_key }) => {
-  if (!order_id || !status_code || !gross_amount || !signature_key) return false;
-  const serverKey = process.env.MIDTRANS_SERVER_KEY || 'SB-Mid-server-placeholder';
-  const harapan = crypto
-    .createHash('sha512')
-    .update(`${order_id}${status_code}${gross_amount}${serverKey}`)
-    .digest('hex');
-  return harapan === signature_key;
+const cekStatusQris = async (req, res, next) => {
+  try {
+    const transaksi = await ambilTransaksiMilik(req, res);
+    if (!transaksi) return;
+    const terkini = await sinkronkanStatus(transaksi);
+    return sukses(res, 200, 'Status pembayaran diperbarui', terkini);
+  } catch (error) {
+    tanganiGalatBisnis(error, res, next);
+  }
+};
+
+const batalkanTransaksiQris = async (req, res, next) => {
+  try {
+    const transaksi = await ambilTransaksiMilik(req, res);
+    if (!transaksi) return;
+    const terkini = await batalkanQris(transaksi);
+    return sukses(res, 200, 'Pembayaran QRIS dibatalkan', terkini);
+  } catch (error) {
+    tanganiGalatBisnis(error, res, next);
+  }
+};
+
+const simulasiBayarQris = async (req, res, next) => {
+  try {
+    const transaksi = await ambilTransaksiMilik(req, res);
+    if (!transaksi) return;
+    const terkini = await simulasikanBayar(transaksi);
+    return sukses(res, 200, 'Pembayaran QRIS simulasi diterima', terkini);
+  } catch (error) {
+    tanganiGalatBisnis(error, res, next);
+  }
 };
 
 const webhookMidtrans = async (req, res, next) => {
@@ -243,38 +260,15 @@ const webhookMidtrans = async (req, res, next) => {
       return gagal(res, 401, 'Tanda tangan notifikasi tidak valid', 'TIDAK_TERAUTENTIKASI');
     }
 
-    const { order_id, transaction_status } = req.body;
-
-    const transaksi = await Transaksi.findOne({ midtransOrderId: order_id });
+    const transaksi = await Transaksi.findOne({ midtransOrderId: req.body.order_id });
     if (!transaksi) {
       return gagal(res, 404, 'Transaksi tidak ditemukan', 'TIDAK_DITEMUKAN');
     }
 
-    if (transaction_status === 'settlement' || transaction_status === 'capture') {
-      if (transaksi.statusBayar === 'menunggu') {
-        try {
-          await prosesPenguranganStokTransaksi(transaksi.items, transaksi.kasirId, transaksi._id);
-        } catch (error) {
-          if (error.kodeGalat === 'STOK_TIDAK_CUKUP') {
-            transaksi.statusBayar = 'gagal';
-            await transaksi.save();
-            return gagal(res, 422, error.message, 'PEMBAYARAN_GAGAL');
-          }
-          throw error;
-        }
-        transaksi.statusBayar = 'berhasil';
-        await transaksi.save();
-      }
-    } else if (['cancel', 'deny', 'expire'].includes(transaction_status)) {
-      if (transaksi.statusBayar === 'menunggu') {
-        transaksi.statusBayar = 'dibatalkan';
-        await transaksi.save();
-      }
-    }
-
+    await terapkanStatus(transaksi._id, PETA_STATUS[req.body.transaction_status]);
     return sukses(res, 200, 'Notifikasi diproses');
   } catch (error) {
-    next(error);
+    tanganiGalatBisnis(error, res, next);
   }
 };
 
@@ -283,5 +277,8 @@ module.exports = {
   daftarTransaksi,
   detailTransaksi,
   bayarQris,
+  cekStatusQris,
+  batalkanTransaksiQris,
+  simulasiBayarQris,
   webhookMidtrans,
 };
