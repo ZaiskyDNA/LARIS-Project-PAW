@@ -3,7 +3,7 @@
 Alat: Postman (koleksi `backend/docs/LARIS.postman_collection.json`) dan skrip `backend/scripts/ujiIntegritas.js`.
 Lingkungan: Node.js 20, MongoDB 7, data dari `npm run seed`.
 
-Hasil: 147 request, 314 test lulus, 0 gagal. Skrip integritas: 11 pemeriksaan lulus.
+Hasil: 149 request, 320 assertion lulus, 0 gagal (dijalankan dengan Newman). Skrip integritas: 11 pemeriksaan lulus.
 
 ## Uji otorisasi
 
@@ -29,7 +29,7 @@ Hasil: 147 request, 314 test lulus, 0 gagal. Skrip integritas: 11 pemeriksaan lu
 - harga diubah, transaksi lama tetap memakai harga lama
 - kasir hanya melihat transaksi sendiri, transaksi pemilik menghasilkan 403
 - produk yang dihapus hilang dari katalog tetapi tetap ada di produk terlaris dengan tanda "(nonaktif)"
-- QRIS: stok tidak berkurang saat menunggu, berkurang setelah webhook settlement, tidak berkurang dua kali jika webhook diulang, tidak berubah jika kedaluwarsa
+- QRIS (mode simulasi, tanpa kunci Midtrans): stok tidak berkurang saat menunggu, berkurang setelah pembayaran simulasi berhasil, tidak berkurang dua kali bila pembayaran diulang, tidak berubah bila dibatalkan; webhook dengan tanda tangan salah ditolak 401
 - ekspor xlsx dan pdf menghasilkan berkas dengan nama berisi rentang tanggal
 - validasi: harga/stok negatif, qty negatif atau pecahan, kata sandi lemah, email tidak valid, tanggal terbalik atau tidak ada, ID bukan ObjectId, JSON rusak
 - login salah memberi pesan yang sama untuk email tidak terdaftar dan kata sandi salah
@@ -55,6 +55,6 @@ Hasil: 147 request, 314 test lulus, 0 gagal. Skrip integritas: 11 pemeriksaan lu
 
 ## Belum teruji atau belum selesai
 
-- QRIS belum dicoba dengan kunci Midtrans sungguhan. Tanpa kunci, API mengembalikan sesi contoh (`mock: true`)
-- deployment belum dilakukan
+- QRIS tidak memakai Midtrans sungguhan. Tanpa kunci, API membuat kode QR simulasi (`simulasi: true`) yang ditandai lunas lewat `POST /transaksi/:id/simulasi-bayar`
+- deployment: backend di AWS Lambda (Function URL) dan frontend di AWS Amplify, lihat [panduan-deploy-aws.md](./panduan-deploy-aws.md)
 - logout hanya menghapus token di klien
