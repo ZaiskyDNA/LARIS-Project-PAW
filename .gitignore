@@ -5,3 +5,8 @@ node_modules/
 *.log
 .postman/
 postman/
+
+# Paket deploy & artefak uji lokal
+*.zip
+dist-lambda/
+.playwright-mcp/

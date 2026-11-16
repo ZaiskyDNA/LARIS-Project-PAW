@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Paket deploy AWS Amplify
+laris-frontend.zip
