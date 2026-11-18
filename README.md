@@ -6,6 +6,11 @@ LARIS (Layanan Administrasi Ritel & Inventaris Stok) adalah sistem kasir dan man
 
 Aplikasi ini menyediakan satu sumber data terpusat untuk mendukung aktivitas kasir dan pemantauan toko oleh pemilik.
 
+## 🔗 Demo Aplikasi & Video
+
+- **Web App (deployed):** [https://main.d2lss73mawoit.amplifyapp.com](https://main.d2lss73mawoit.amplifyapp.com)
+- **Video Demo:** [Google Drive - Video Demo LARIS](https://drive.google.com/file/d/1CFKWpkA503bGetVuL06VwbEtvILfxdOd/view?usp=sharing)
+
 ## Kelompok & Anggota Tim
 
 **Nama Kelompok:** Kelompok 15
